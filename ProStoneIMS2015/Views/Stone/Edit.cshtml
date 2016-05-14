@@ -1,0 +1,124 @@
+﻿    @model ProStoneIMS2015.Models.Stone
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 class="modal-title">Edit Record</h3>
+    </div>
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m=>m.Id)
+
+        <div class="modal-body">
+            <div class="form-horizontal">
+
+
+                <div class="form-group">
+                    @Html.LabelFor(m => Model.StoneName, new { @class = "control-label col-sm-3" })
+                    <div class="col-sm-9">
+                        @Html.TextBoxFor(m => m.StoneName, new { @class = "form-control required" })
+                        <div>
+                            @Html.ValidationMessageFor(m => m.StoneName)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => Model.Thickness, new { @class = "control-label col-sm-3" })
+                    <div class="col-sm-9">
+                        @Html.TextBoxFor(m => m.Thickness, new { @class = "form-control required" })
+                        <div>
+                            @Html.ValidationMessageFor(m => m.Thickness)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => Model.CatalogID, new { @class = "control-label col-sm-3" })
+                    <div class="col-sm-9">
+                        @Html.TextBoxFor(m => m.CatalogID, new { @class = "form-control" })
+                        <div>
+                            @Html.ValidationMessageFor(m => m.CatalogID)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => Model.Type, new { @class = "control-label col-sm-3" })
+                    <div class="col-sm-9">
+                        @Html.DropDownListFor(m => m.Type, new SelectList((System.Collections.IEnumerable)ViewData["Stone_type"], "Value", "Text"), "", new { @class = "form-control required" })
+                        <div>
+                            @Html.ValidationMessageFor(m => m.Type)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => Model.Price, new { @class = "control-label col-sm-3" })
+                    <div class="col-sm-9">
+                        @Html.TextBoxFor(m => m.Price, new { @class = "form-control required" })
+                        <div>
+                            @Html.ValidationMessageFor(m => m.Price)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => Model.WOPrice, new { @class = "control-label col-sm-3" })
+                    <div class="col-sm-9">
+                        @Html.TextBoxFor(m => m.WOPrice, new { @class = "form-control required" })
+                        <div>
+                            @Html.ValidationMessageFor(m => m.WOPrice)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => Model.OnPromo, new { @class = "control-label col-sm-3" })
+                    <div class="col-sm-9">
+                        <label class="form-control">
+                            @Html.CheckBoxFor(m => m.OnPromo, new { style = "margin-left:5px;" })
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => Model.Notes, new { @class = "control-label col-sm-3" })
+                    <div class="col-sm-9">
+                        @Html.TextBoxFor(m => m.Notes, new { @class = "form-control" })
+                        <div>
+                            @Html.ValidationMessageFor(m => m.Notes)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => Model.Inactive, new { @class = "control-label col-sm-3" })
+                    <div class="col-sm-9">
+                        <label class="form-control">
+                            @Html.CheckBoxFor(m => m.Inactive, new { style = "margin-left:5px;" })
+                        </label>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <span id="progress" class="text-center" style="display: none;">
+                <img src="images/wait.gif" alt="..." />
+                Wait...
+            </span>
+
+            <input class="btn btn-primary" type="submit" value="Save" />
+            <button class="btn btn-warning" data-dismiss="modal">Close</button>
+        </div>
+    }
+    <script>
+        $("form").removeData("validator");
+        $("form").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse("form");
+    </script>

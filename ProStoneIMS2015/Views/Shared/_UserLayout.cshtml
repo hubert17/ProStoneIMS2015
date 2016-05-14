@@ -1,0 +1,314 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="img/favicon.png">
+    <link rel="shortcut icon" href="img/favicon.png">
+    <title>@ViewBag.Title - ProStone Information Management System</title>
+
+    @Styles.Render("~/Content/admincss")
+
+    @RenderSection("customcss", required: false)
+
+    @Scripts.Render("~/bundles/modernizr")
+
+    <!-- js placed at the end of the document so the pages load faster BUT PUTTING THIS ON HEAD ELEMENT ENSURES FUNCTIONALITY! -->
+    @Scripts.Render("~/bundles/jquery")
+</head>
+
+<body class="full-width">
+    <section id="container" class="sidebar-closed">
+        <!--header start-->
+        <header class="header white-bg">
+            <div class="navbar-header">
+                <div class="sidebar-toggle-box">
+                    <div data-original-title="Toggle Navigation" data-placement="right" class="fa fa-bars tooltips"></div>
+                </div>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="fa fa-bar"></span>
+                    <span class="fa fa-bar"></span>
+                    <span class="fa fa-bar"></span>
+                </button>
+                <!--logo start-->
+                <a href="index.html" class="logo">ProStone<span>IMS</span></a>
+                <!--logo end-->
+                <div class="horizontal-menu navbar-collapse collapse ">
+                    <ul class="nav navbar-nav">
+                        <li class="@(ViewContext.RouteData.Values["controller"].ToString() == "Status" ? "active" : "")"><a href="#">Status</a></li>
+                        <li class="@(ViewContext.RouteData.Values["controller"].ToString() == "Quote" ? "active" : "")">@Html.ActionLink("Create New Quote", "Create", "Quote", null, new Dictionary<string, object> { { "id", "btnCreateQuote" }, { "data-modal", "" } })</li>
+                        <li class="menu-item dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Manage <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li class="@(ViewContext.RouteData.Values["controller"].ToString() == "Stone" ? "active" : "")">@Html.ActionLink("Stone", "Index", "Stone")</li>
+                                <li class="@(ViewContext.RouteData.Values["controller"].ToString() == "Jservice" ? "active" : "")">@Html.ActionLink("Services", "Index", "Jservice")</li>
+                                <li class="@(ViewContext.RouteData.Values["controller"].ToString() == "Sink" ? "active" : "")">@Html.ActionLink("Sinks", "Index", "Sink")</li>
+                                <li class="@(ViewContext.RouteData.Values["controller"].ToString() == "Edge" ? "active" : "")">@Html.ActionLink("Edges", "Index", "Edge")</li>
+                                <li class="@(ViewContext.RouteData.Values["controller"].ToString() == "Measurement" ? "active" : "")">@Html.ActionLink("Measurements", "Index", "Measurement")</li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a class="trigger right-caret">Misc</a>
+                                    <ul class="dropdown-menu sub-menu">
+                                        <li>@Html.ActionLink("Vendors", "Index", "Vendors")</li>
+                                        <li><a href="#"><span>Sink Types</span></a></li>
+                                        <li><a href="#"><span>Service Types</span></a></li>
+                                        <li>@Html.ActionLink("Assigned To's", "Index", "Assignedto")</li>
+                                        <li><a href="#"><span>Salesmen</span></a></li>
+                                        <li><a href="#"><span>Leads</span></a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a class="trigger right-caret" style="display:none;">Page Templates</a>
+                                    <ul class="dropdown-menu sub-menu">
+                                        <li><a href="/admin2014/PageTemplate/index.html"><span>Index</span></a></li>
+                                        <li><a href="/admin2014/PageTemplate/Modals.html"><span>Modals</span></a></li>
+                                        <li><a href="/admin2014/PageTemplate/Portfolio.aspx"><span>Portfolio</span></a></li>
+                                        <li><a href="/admin2014/PageTemplate/Shop-homepage.aspx"><span>Shop Homepage</span></a></li>
+                                        <li><a href="/admin2014/PageTemplate/Shop-item.aspx"><span>Shop Item</span></a></li>
+                                        <li><a href="/admin2014/PageTemplate/Simple-sidebar.aspx"><span>Simple Sidebar</span></a></li>
+                                        <li><a href="/admin2014/PageTemplate/Small-business.aspx"><span>Small Business</span></a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#">Install Calendar</a>
+                                </li>
+                                <li>
+                                    <a href="#">Task Report</a>
+                                </li>
+                                <li>
+                                    <a href="#">Sales Report</a>
+                                </li>
+                                <li class="nav-divider">
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Calendar <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#">Tasks Calendar</a>
+                                </li>
+                                <li>
+                                    <a href="#">Install Calendar</a>
+                                </li>
+                                <li>
+                                    <a href="#">Measure Calendar</a>
+                                </li>
+                                <li>
+                                    <a href="#">Template Calendar</a>
+                                </li>
+                                <li class="nav-divider">
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="top-nav ">
+                    <ul class="nav pull-right top-menu">
+                        <li>
+                            <input type="text" class="form-control search" placeholder=" Search">
+                        </li>
+                        <!-- user login dropdown start-->
+                        @Html.Partial("_LoginPartial")
+                        <!-- user login dropdown end -->
+                    </ul>
+                </div>
+            </div>
+        </header>
+        <!--header end-->
+        <!--sidebar start-->
+        <aside>
+            <div id="sidebar" class="nav-collapse">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu" id="nav-accordion">
+                    @if (Request.IsAuthenticated && User.IsInRole("admin"))
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "Home")">
+                                <i class="fa fa-dashboard"></i>
+                                <span>Home</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "Home")">
+                                <i class="fa fa-dashboard"></i>
+                                <span>Subscribers</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "Home")">
+                                <i class="fa fa-dashboard"></i>
+                                <span>App Settings</span>
+                            </a>
+                        </li>
+                    }
+                    else if (Request.IsAuthenticated && User.IsInRole("subscriber"))
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "Home")">
+                                <i class="fa fa-dashboard"></i>
+                                <span>Home</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-dashboard"></i>
+                                <span>Stones</span>
+                            </a>
+                        </li>
+                        <li class="sub-menu">
+                            <a href="javascript:;">
+                                <i class="fa fa-laptop"></i>
+                                <span>Input</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a href="#">Edges</a></li>
+                                <li><a href="#">Sinks</a></li>
+                                <li><a href="#">Services</a></li>
+                                <li><a href="#">Measurement Assets</a></li>
+                            </ul>
+                        </li>
+                        <li class="sub-menu">
+                            <a href="javascript:;">
+                                <i class="fa fa-laptop"></i>
+                                <span>Miscellaneous</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a href="#">Vendors</a></li>
+                                <li><a href="#">Lead</a></li>
+                                <li><a href="@Url.Action("Index", "Phone")">CRUD TEMPLATE</a></li>
+                            </ul>
+                        </li>
+                        <li class="sub-menu">
+                            <a href="javascript:;">
+                                <i class="fa fa-laptop"></i>
+                                <span>Settings</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a href="#">Company Info</a></li>
+                                <li>@Html.ActionLink("Users", "Index", "User")</li>
+                            </ul>
+                        </li>
+                        <li class="sub-menu">
+                            <a href="javascript:;">
+                                <i class="fa fa-laptop"></i>
+                                <span>Manage Subscription</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a href="#">Subscription</a></li>
+                                <li><a href="#">Modules</a></li>
+                                <li><a href="#">Add-ons</a></li>
+                            </ul>
+                        </li>
+                    }
+                    else if (Request.IsAuthenticated)
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "Home")">
+                                <i class="fa fa-dashboard"></i>
+                                <span>Home</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="fa fa-dashboard"></i>
+                                <span>Jobs</span>
+                            </a>
+                        </li>
+                        <li class="sub-menu">
+                            <a href="javascript:;">
+                                <i class="fa fa-laptop"></i>
+                                <span>Reports</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a href="#">Task Report</a></li>
+                                <li><a href="#">Sales Report</a></li>
+                                <li><a href="#">Install Calendar</a></li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+                <!-- sidebar menu end-->
+            </div>
+        </aside>
+        <!--sidebar end-->
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper site-min-height">
+                <!-- page start-->
+                @RenderBody()
+                <!-- page end-->
+            </section>
+        </section>
+        <!--main content end-->
+        <!--footer start-->
+        <footer class="site-footer">
+            <div class="text-center">
+                2013 &copy; ProStone Management System
+                <a href="#" class="go-top">
+                    <i class="fa fa-angle-up"></i>
+                </a>
+            </div>
+        </footer>
+        <!--footer end-->
+    </section>
+
+    <!-- modal placeholder-->
+    <div id='psmdl' class='modal fade in'>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id='myModalContent'></div>
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/bootstrap")
+    <script>
+        $(window).load(function () {
+            $(function () {
+                $(".dropdown-menu > li > a.trigger").on("click", function (e) {
+                                    var current = $(this).next();
+                                    var grandparent = $(this).parent().parent();
+                                    if ($(this).hasClass('left-caret') || $(this).hasClass('right-caret'))
+                        $(this).toggleClass('right-caret left-caret');
+                                    grandparent.find('.left-caret').not(this).toggleClass('right-caret left-caret');
+                                    grandparent.find(".sub-menu:visible").not(current).hide();
+                                    current.toggle();
+                                    e.stopPropagation();
+                                });
+                $(".dropdown-menu > li > a:not(.trigger)").on("click", function () {
+                                    var root = $(this).closest('.dropdown');
+                                    root.find('.left-caret').toggleClass('right-caret left-caret');
+                                    root.find('.sub-menu:visible').hide();
+                                });
+                            });
+                        });
+    </script>
+
+
+    @Scripts.Render("~/bundles/jqueryval")
+    @*<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"></script>*@
+    @*<script src="http://ajax.aspnetcdn.com/ajax/mvc/5.2.3/jquery.validate.unobtrusive.min.js"></script>*@
+
+
+
+    @Scripts.Render("~/bundles/adminjs")
+
+    @Scripts.Render("~/scripts/appjs/ps-crud.js")
+
+    @RenderSection("scripts", required: false)
+
+
+</body>
+</html>

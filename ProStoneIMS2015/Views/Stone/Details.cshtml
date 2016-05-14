@@ -1,0 +1,50 @@
+﻿    @model ProStoneIMS2015.Models.Stone
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 class="modal-title">Detail</h3>
+    </div>
+
+    <div class="modal-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-condensed" id="detail-modal">
+                <tr>
+                    <td width="30%">@Html.LabelFor(m => Model.StoneName):</td>
+                    <td width="70%">@Model.StoneName</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => Model.CatalogID):</td>
+                    <td>@Model.CatalogID</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => Model.TypeName):</td>
+                    <td>@Model.TypeName</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => Model.Price):</td>
+                    <td>@String.Format("{0:C}", @Model.Price)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => Model.WOPrice):</td>
+                    <td>@String.Format("{0:C}", @Model.WOPrice)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => Model.OnPromo):</td>
+                    <td>@(Model.OnPromo ? "Yes" : "No")</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => Model.Notes):</td>
+                    <td>@Model.Notes</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => Model.Inactive):</td>
+                    <td>@Html.CheckBoxFor(m => m.Inactive, new { @disabled="disabled" })</td>
+                </tr>
+            </table>
+        </div>
+
+
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-warning" data-dismiss="modal">Close</button>
+    </div>

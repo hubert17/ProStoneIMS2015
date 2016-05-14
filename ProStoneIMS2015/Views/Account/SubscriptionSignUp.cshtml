@@ -1,0 +1,90 @@
+﻿@model ProStoneIMS2015.Models.SubscriberViewModel
+@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+    ViewBag.Title = "Sign Up";
+}
+
+@section customcss{
+    <style>
+        body {
+            padding-top: 1px !important;
+        }
+
+        .field-validation-error {
+            font-size: x-small;
+        }
+    </style>
+}
+
+<h3>@ViewBag.Error</h3>
+
+@using (Html.BeginForm("SubscriptionSignUp", "Account", FormMethod.Post, new { @class = "form-signin", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <h2 class="form-signin-heading">sign-up now</h2>
+    <div class="login-wrap">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger text-center" })
+
+        <p> Enter your account details below</p>
+        @Html.TextBoxFor(m => m.CompanyName, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.CompanyName), autofocus = "autofocus" })
+        @Html.ValidationMessageFor(m => m.CompanyName, "", new { @class = "text-danger" })
+
+        @Html.TextBoxFor(m => m.SubscriberKey, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.SubscriberKey) })
+        <span style="font-size:x-small;"><a href="#">Learn more about Subscription Key</a></span>
+        @Html.ValidationMessageFor(m => m.SubscriberKey, "", new { @class = "text-danger" })
+
+        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.Email) })
+        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+ 
+        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.Password) })
+        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+
+        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.ConfirmPassword) })
+        @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+
+        <p> Enter your company details below</p>
+        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.FirstName) })
+        @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+
+        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.LastName) })
+        @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+
+        @Html.TextBoxFor(m => m.Street, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.Street) })
+        @Html.ValidationMessageFor(m => m.Street, "", new { @class = "text-danger" })
+
+        @Html.TextBoxFor(m => m.Address, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.Address) })
+        @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+ 
+        @Html.TextBoxFor(m => m.City, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.City) })
+        @Html.ValidationMessageFor(m => m.City, "", new { @class = "text-danger" })
+
+        @Html.TextBoxFor(m => m.State, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.State) })
+        @Html.ValidationMessageFor(m => m.State, "", new { @class = "text-danger" })
+
+        @Html.TextBoxFor(m => m.Zip, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.Zip) })
+        @Html.ValidationMessageFor(m => m.Zip, "", new { @class = "text-danger" })
+
+        @Html.TextBoxFor(m => m.Country, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.Country) })
+        @Html.ValidationMessageFor(m => m.Country, "", new { @class = "text-danger" })
+
+        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.Phone) })
+        @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+
+
+        <label class="checkbox">
+            <input type="checkbox" value="agree this condition"> I agree to the Terms of Service and Privacy Policy
+        </label>
+        <input type="submit" value="Sign Up" class="btn btn-lg btn-login btn-block" />
+        <div class="registration">
+            Already subcribed?
+            @Html.ActionLink("Login", "Login")
+        </div>
+
+    </div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

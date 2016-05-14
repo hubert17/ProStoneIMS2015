@@ -1,0 +1,40 @@
+﻿@model ProStoneIMS2015.Models.StoneInventoryList<ProStoneIMS2015.Models.StoneInventory>
+
+@{
+
+    Layout = null;
+
+}
+
+<div id="InventoryPopover">
+
+    @{
+        var grid2 = new WebGrid(canSort: true, ajaxUpdateContainerId: "gridContent2");
+        grid2.Bind(Model.Content);
+    }
+
+    <div id="gridContent2">
+        @grid2.GetHtml(htmlAttributes: new { id = "grid2" },   // id for ajaxUpdateContainerId parameter
+                        fillEmptyRows: false,
+                        tableStyle: "table table-condensed table-hover table-bordered",
+                        mode: WebGridPagerModes.All,
+                        columns: grid2.Columns(
+                          grid2.Column("SerialNo", "Length"),
+                          grid2.Column("Length", "Length"),
+                          grid2.Column("Width", "Width"),
+                          grid2.Column("Width", "Width"),
+                          grid2.Column("LotNo", "LotNo"),
+                          grid2.Column("VendorName", "VendorName"),
+                          grid2.Column(header: "Consignment", format: @<text>@(item.Consignment == true ? Html.Raw("<i class='fa fa-check'></i>") : null)</text>)
+                        ))
+
+    </div>
+
+
+
+</div>
+
+
+
+
+

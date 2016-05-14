@@ -1,0 +1,1345 @@
+﻿@{
+    ViewBag.Title = "Edit Quote";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section customcss{
+        <link href="@Url.Content("~/Content/datetimepicker.css")" rel="stylesheet" />
+<link href="@Url.Content("~/Content/file-upload/jquery.fileupload.css")" rel="stylesheet" />
+<link href="@Url.Content("~/Content/file-upload/jquery.fileupload-ui.css")" rel="stylesheet" />
+    <style>
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {display: none !important;}
+
+        .nopadding {
+           padding: 0 !important;
+           margin: 0 !important;
+        }
+        .nopadding-right {
+           padding-right: 0 !important;
+           margin-right: 0 !important;
+        }
+
+        .form-group p {
+            font-size:large;
+            height: 3.17em;
+        }
+        .form-group label {
+            color:#aaa
+        }
+
+        span .help-block {
+
+        }
+
+        ul.list-group li.list-group-item .dropdown, ul.list-group li.list-group-item input, ul.list-group li.list-group-item label {
+            max-width: 220px;
+            float: right;            
+        }
+
+        ul.list-group li.list-group-item {
+            height: 4.2em;
+        }
+
+        #job-tab .list-group .list-group-item span {
+            font-size:small;
+        }
+
+        .popover-title .close {
+            position: relative;
+            bottom: 3px;
+        }
+        .popover > .arrow, .popover > .arrow:after {
+            display:none;
+        }
+
+        .list-group-item table tr td {
+            border-bottom: 1px solid #EBEBEB !important;
+            font-size: 12px;
+        }
+        .popover {
+            max-width: 800px;
+        }
+
+        ul.stone-detail li.list-group-item {
+            height: 3.2em !important;
+        }
+        .list-group-item {
+            padding-left: -2px !important;
+            margin-left: -2px !important;
+        }
+        .list-group-item:first-child {
+          border-top-right-radius: 0px !important;
+          border-top-left-radius: 0px !important;
+        }
+
+        .list-group-item:last-child {
+          border-bottom-right-radius: 0px !important;
+          border-bottom-left-radius: 0px !important;
+        }
+        .list-group-item:hover, ul.stone-detail .list-group-item:first-child {
+            -webkit-box-shadow: inset 0px 0px 40px -10px rgba(123,183,235,1);
+            -moz-box-shadow: inset 0px 0px 40px -10px rgba(123,183,235,1);
+            box-shadow: inset 0px 0px 40px -10px rgba(123,183,235,1);
+        }
+
+        #stone-tab .panel-body {
+            padding: 0 !important;
+            border-top: 0;
+        }
+        #stone-tab .panel-info {
+            border: 1px solid #ddd;
+        }
+
+        #stone-tab .list-group-item {
+            padding: 10px 15px;
+            margin-bottom: -1px;
+        }
+        #stone-tab .list-group {
+            margin-left: 1px;
+            margin-right: -7px;
+        }
+        #MeasureTable.table tbody > tr > td {
+            padding: 5px !important;
+        }
+
+        #PaymentTable.table tbody > tr > td {
+            padding-top:5px !important;
+            padding-bottom:5px !important;
+        }
+
+        .PaymentTable  {
+            padding: 0px;
+            padding-left:15px !important;
+            padding-right:15px !important;
+        }
+
+        #overlay-back { 
+            position   : absolute; 
+            top        : 0; 
+            left       : 0; 
+            width      : 100%; 
+            height     : 100%; 
+            background : #000; 
+            opacity    : 0.7; 
+            filter     : alpha(opacity=70); 
+            z-index    : 5;
+            display    : none;
+        } 
+
+        #pdfRendered {
+	        width: 800px;
+	        height: 600px;
+	        margin: 2em auto;
+	        border: 10px solid #6699FF;
+        }
+
+    </style>
+}
+
+<div id="overlay-back"></div> 
+
+<h2>Quote Editor</h2>
+
+<section data-ng-app="gabsNgApp" class="panel" >
+    <div  class="ng-cloak" data-ng-controller="quoteController" data-ng-init="loadData(@Url.RequestContext.RouteData.Values["id"]);">
+            <header class="panel-heading tab-bg-dark-navy-blue tab-right">
+                <ul class="nav nav-tabs pull-right">
+                    <li class="active">
+                        <a data-toggle="tab" href="#cust-tab">
+                            <i class="fa fa-user"></i>
+                            Customer Info
+                        </a>
+                    </li>
+                    <li class="">
+                        <a data-toggle="tab" href="#job-tab">
+                            <i class="fa fa-info-circle"></i>
+                            Job Info
+                        </a>
+                    </li>
+                    <li class="">
+                        <a data-toggle="tab" href="#stone-tab">
+                            <i class="fa fa-th-large"></i>
+                            Stone
+                        </a>
+                    </li>
+                    <li class="">
+                        <a data-toggle="tab" href="#sink-tab">
+                            <i class="fa fa-life-bouy"></i>
+                            Sinks
+                        </a>
+                    </li>
+                    <li class="">
+                        <a data-toggle="tab" href="#service-tab">
+                            <i class="fa fa-suitcase"></i>
+                            Services
+                        </a>
+                    </li>
+                    <li class="">
+                        <a data-toggle="tab" href="#preview-tab">
+                            <i class="fa fa-print"></i>
+                            Preview
+                        </a>
+                    </li>
+                </ul>
+                <span class="hidden-sm wht-color">[#{{ quote.Id }}] {{ quote.FirstName }} {{ quote.LastName }}</span>
+            </header>
+            <div class="panel-body">
+                <div class="tab-content" data-ng-controller="AlertDemoCtrl">
+                    <div id="cust-tab" class="tab-pane active">
+                            <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)" class="ng-alert-fadeOut">{{alert.msg}}</alert>
+                            <div class="col-sm-6 col-xs-12 nopadding">
+                                <div class="container-fluid">
+                                    <div class="col-sm-6 col-xs-12" id="userFormColumn1">
+                                        <div class="form-group">
+                                            <label for="FirstName">First Name</label>
+                                            <p data-ng-hide="quote.editMode">{{ quote.FirstName }}</p>
+                                            <span data-ng-show="quote.editMode">
+                                                <input type="text" name="FirstName" id="FirstName" data-ng-model="quote.FirstName" class="form-control input-normal" />
+                                                <span class="help-block">&nbsp</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 nopadding-right" id="userFormColumn1">
+                                        <div class="form-group">
+                                            <label for="LastName">Last Name</label>
+                                            <p data-ng-hide="quote.editMode">{{ quote.LastName }}</p>
+                                            <span data-ng-show="quote.editMode">
+                                                <input type="text" name="LastName" id="LastName" data-ng-model="quote.LastName" class="form-control input-normal" />
+                                                <span class="help-block">&nbsp</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container-fluid">
+                                    <div class="col-sm-6 col-xs-12" id="userFormColumn1">
+                                        <div class="form-group">
+                                            <label for="Address">Address</label>
+                                            <p data-ng-hide="quote.editMode">{{ quote.Address }}</p>
+                                            <span data-ng-show="quote.editMode">
+                                                <input type="text" name="Address" id="Address" data-ng-model="quote.Address" class="form-control input-normal" />
+                                                <span class="help-block">&nbsp</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12  nopadding-right" id="userFormColumn1">
+                                        <div class="form-group">
+                                            <label for="City">City</label>
+                                            <p data-ng-hide="quote.editMode">{{ quote.City }}</p>
+                                            <span data-ng-show="quote.editMode">
+                                                <input type="text" name="City" id="City" data-ng-model="quote.City" class="form-control input-normal" />
+                                                <span class="help-block">&nbsp</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container-fluid">
+                                    <div class="col-sm-6 col-xs-12" id="userFormColumn1">
+                                        <div class="form-group">
+                                            <label for="State">State</label>
+                                            <p data-ng-hide="quote.editMode">{{ quote.State }}</p>
+                                            <span data-ng-show="quote.editMode">
+                                                <input type="text" name="State" id="State" data-ng-model="quote.State" class="form-control input-normal" />
+                                                <span class="help-block">&nbsp</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 nopadding-right" id="userFormColumn1">
+                                        <div class="form-group">
+                                            <label for="Zip">Zip</label>
+                                            <p data-ng-hide="quote.editMode">{{ quote.Zip }}</p>
+                                            <span data-ng-show="quote.editMode">
+                                                <input type="text" name="Zip" id="Zip" data-ng-model="quote.Zip" class="form-control input-normal" />
+                                                <span class="help-block">&nbsp</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-xs-12 nopadding">
+                                <div class="container-fluid nopadding">
+                                    <div class="col-xs-12" id="userFormColumn1">
+                                        <div class="form-group">
+                                            <label for="Phone">Phone</label>
+                                            <p data-ng-hide="quote.editMode">{{ quote.Phone }}</p>
+                                            <span data-ng-show="quote.editMode">
+                                                <input type="text" name="Phone" id="Phone" data-ng-model="quote.Phone" class="form-control input-normal" />
+                                                <span class="help-block">&nbsp</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container-fluid nopadding">
+                                    <div class="col-xs-12" id="userFormColumn1">
+                                        <div class="form-group">
+                                            <label for="Email">Email</label>
+                                            <p data-ng-hide="quote.editMode">{{ quote.Email }}</p>
+                                            <span data-ng-show="quote.editMode">
+                                                <input type="text" name="Email" id="Email" data-ng-model="quote.Email" class="form-control input-normal" />
+                                                <span class="help-block">&nbsp</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container-fluid nopadding">
+                                    <div class="col-xs-12" id="userFormColumn1">
+                                        <div class="form-group">
+                                            <label for="firstName"></label>
+                                            <p>
+                                            </p>
+                                            <span class="help-block">&nbsp</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-fluid">
+                                <div class="col-xs-12">
+                                    <span data-ng-hide="quote.editMode"><a class="btn btn-primary btn-lg" data-ng-click="edit(quote)" href="javascript:;"><span class="glyphicon glyphicon-pencil"></span> Edit</a><a data-ng-click="delete(quote)" href="javascript:;"><span class="glyphicon glyphicon-trash hidden"></span></a></span>
+                                    <span data-ng-show="quote.editMode"><a class="btn btn-primary btn-lg" data-ng-click="save(quote)" href="javascript:;"><span class="glyphicon " ng-class="{'glyphicon-refresh glyphicon-refresh-animate': loading,  'glyphicon-ok': !loading}"></span> Save</a> <a class="btn btn-danger btn-lg" data-ng-click="discard(quote)" href="javascript:;"><span class="glyphicon glyphicon-remove-sign"></span> Discard</a></span>
+                                </div>
+                            </div>
+                    </div>
+
+                    <div id="job-tab" class="tab-pane ng-cloak" data-ng-controller="jobController" data-ng-init="loadData(@Url.RequestContext.RouteData.Values["id"]);">
+                        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)" class="ng-alert-fadeOut">{{alert.msg}}</alert>
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <ul class="list-group">
+                                    <li class="list-group-item text-right col-sm-6"><span class="pull-left"><strong>Job #:</strong></span> &nbsp;{{ job.Id }}</li>
+                                    <li class="list-group-item text-right col-sm-6">
+                                        <span class="pull-left"><strong>User Job No:</strong></span>
+                                        &nbsp;<span data-ng-hide="job.editMode">{{ job.JobNo }}</span>
+                                        <span data-ng-show="job.editMode">
+                                            <input type="text" name="JobNo" ng-model="job.JobNo" class="form-control">
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item text-right col-sm-6">
+                                        <span class="pull-left"><strong>Verified?</strong></span>
+                                        &nbsp;<span data-ng-hide="job.editMode">{{ job.Verified ? 'Yes':'No' }}</span>
+                                        <span data-ng-show="job.editMode">
+                                            <label class="form-control">
+                                                <input type="checkbox" ng-model="job.Verified">
+                                            </label>
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item text-right col-sm-6">
+                                        <span class="pull-left"><strong>Pay Status:</strong></span>
+                                        &nbsp;<span data-ng-hide="job.editMode" ng-repeat="j in jobddl.PayStatus  | filter: job.PayStatus" ng-if="j.value == job.PayStatus">{{ j.text }}</span>
+                                        <span data-ng-show="job.editMode">
+                                            <select name="PayStatusDropdown" ng-model="job.PayStatus"
+                                                    ng-options="slookup.value as slookup.text for slookup in jobddl.PayStatus"
+                                                    ng-selected="slookup.value==job.PayStatus"
+                                                    class="dropdown form-control" required>
+                                                <option value=""></option>
+                                            </select>
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item text-right col-sm-6">
+                                        <span class="pull-left"><strong>Backsplash:</strong></span>
+                                        &nbsp;<span data-ng-hide="job.editMode" ng-repeat="j in jobddl.Backsplash  | filter: job.Backsplash" ng-if="j.value == job.Backsplash">{{ j.text }}</span>
+                                        <span data-ng-show="job.editMode">
+                                            <select name="BacksplashDropdown" ng-model="job.Backsplash"
+                                                    ng-options="slookup.value as slookup.text for slookup in jobddl.Backsplash"
+                                                    ng-selected="slookup.value==job.Backsplash"
+                                                    class="dropdown form-control" required>
+                                                <option value=""></option>
+                                            </select>
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item text-right col-sm-6">
+                                        <span class="pull-left"><strong>Lead:</strong></span>
+                                        &nbsp;<span data-ng-hide="job.editMode" ng-repeat="j in jobddl.Lead  | filter: job.Lead" ng-if="j.value == job.Lead">{{ j.text }}</span>
+                                        <span data-ng-show="job.editMode">
+                                            <select name="LeadDropdown" ng-model="job.Lead"
+                                                    ng-options="slookup.value as slookup.text for slookup in jobddl.Lead"
+                                                    ng-selected="slookup.value==job.Lead"
+                                                    class="dropdown form-control" required>
+                                                <option value="" ng-disabled="!!job"></option>
+                                            </select>
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item text-right col-sm-6">
+                                        <span class="pull-left"><strong>Date Created:</strong></span>
+                                        &nbsp;<span data-ng-hide="job.editMode">{{ job.DateCreated | date:'MMM dd, yyyy' }}</span>
+                                        <div class="dropdown" data-ng-show="job.editMode">
+                                            <a class="dropdown-toggle" id="DateCreated" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" data-ng-model="job.DateCreated" datepicker-popup="MMM dd, yyyy"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                </div>
+                                            </a>
+                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                <datetimepicker data-ng-model="job.DateCreated" data-datetimepicker-config="{ startView:'day', minView:'day', dropdownSelector: '#DateCreated' }" />
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item text-right col-sm-6">
+                                        <span class="pull-left"><strong>Salesman:</strong></span>
+                                        &nbsp;<span data-ng-hide="job.editMode" ng-repeat="j in jobddl.Salesman  | filter: job.Salesman" ng-if="j.value == job.Salesman">{{ j.text }}</span>
+                                        <span data-ng-show="job.editMode">
+                                            <select name="SalesmanDropdown" ng-model="job.Salesman"
+                                                    ng-options="slookup.value as slookup.text for slookup in jobddl.Salesman"
+                                                    ng-selected="slookup.value==job.Salesman"
+                                                    class="dropdown form-control" required>
+                                                <option value="" ng-disabled="!!job"></option>
+                                            </select>
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item text-right col-sm-6">
+                                        <span class="pull-left"><strong>Task Date:</strong></span>
+                                        &nbsp;<span data-ng-hide="job.editMode">{{ job.TaskDate | date:'MMM dd, yyyy' }}</span>
+                                        <div class="dropdown" data-ng-show="job.editMode">
+                                            <a class="dropdown-toggle" id="TaskDate" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" data-ng-model="job.TaskDate" datepicker-popup="MMM dd, yyyy"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                                </div>
+                                            </a>
+                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                <datetimepicker data-ng-model="job.TaskDate" data-datetimepicker-config="{ startView:'day', minView:'day', dropdownSelector: '#TaskDate' }" />
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item text-right col-sm-6">
+                                        <span class="pull-left"><strong>Task Time:</strong></span>
+                                        &nbsp;<span data-ng-hide="job.editMode">{{ job.TaskTime | date:'hh:mm a'}}</span>
+                                        <div class="dropdown" data-ng-show="job.editMode">
+                                            <a class="dropdown-toggle" id="TaskTime" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" data-ng-model="job.TaskTime" datepicker-popup="hh:mm a"><span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                                                </div>
+                                            </a>
+                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                <datetimepicker data-ng-model="job.TaskTime" data-datetimepicker-config="{ startView:'hour', minView:'minute', dropdownSelector: '#TaskTime' }" />
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item text-right col-sm-6" data-ng-controller="historyController" ng-init="loadData(@Url.RequestContext.RouteData.Values["id"]);">
+                                        <span class="pull-left">
+                                            <strong data-toggle="popover" custom-popover popover-title="Previous Tasks" popover-placement="right" popover-bodydata="TaskStatusPopover" @*ng-click="loadData(@Url.RequestContext.RouteData.Values["id"]);"*@>Task/Status:<a href=""> <i class="glyphicon glyphicon-info-sign"></i></a></strong>
+                                        </span>
+                                        <div id="TaskStatusPopover" class="hidden">
+                                            <table class="table-condensed table-hover">
+                                                <tr ng-repeat="history in historyModel">
+                                                    <td>
+                                                        {{ history.TaskStatus }} on {{ history.TaskDate | date: 'MMM dd, yyyy' }} at {{ history.TaskTime | date: 'hh:mm a' }} by {{ history.AssignedTo }}
+                                                    </td>
+                                                    <td>
+                                                        <a class="pull-right" data-ng-click="delete(history)" href="javascript:;"><span class="glyphicon glyphicon-trash"></span></a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>                                                                                                                                                               
+                                        &nbsp;<span data-ng-hide="job.editMode" ng-repeat="j in jobddl.TaskStatus  | filter: job.TaskStatus" ng-if="j.value == job.TaskStatus">{{ j.text }}</span>
+                                        <span data-ng-show="job.editMode">
+                                            <select name="TaskStatusDropdown" ng-model="job.TaskStatus"
+                                                    ng-options="slookup.value as slookup.text for slookup in jobddl.TaskStatus"
+                                                    ng-selected="slookup.value==job.TaskStatus"
+                                                    class="dropdown form-control" required>
+                                                <option value="" ng-disabled="!!job"></option>
+                                            </select>
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item text-right col-sm-6">
+                                        <span class="pull-left"><strong>Assigned To:</strong></span>
+                                        &nbsp;<span data-ng-hide="job.editMode" ng-repeat="j in jobddl.AssignedTo  | filter: job.AssignedTo" ng-if="j.value == job.AssignedTo">{{ j.text }}</span>
+                                        <span data-ng-show="job.editMode">
+                                            <select name="BacksplashDropdown" ng-model="job.AssignedTo"
+                                                    ng-options="slookup.value as slookup.text for slookup in jobddl.AssignedTo"
+                                                    ng-selected="slookup.value==job.AssignedTo"
+                                                    class="dropdown form-control" required>
+                                                <option value="" ng-disabled="!!job"></option>
+                                            </select>
+                                        </span>
+                                    </li>
+                                </ul>
+                                <div class="col-lg-12">
+                                    <p></p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <span data-ng-hide="job.editMode"><a class="btn btn-primary btn-lg" data-ng-click="edit(job)" href="javascript:;"><span class="glyphicon glyphicon-pencil"></span> Edit</a><a data-ng-click="delete(job)" href="javascript:;"><span class="glyphicon glyphicon-trash hidden"></span></a></span>
+                                    <span data-ng-show="job.editMode"><a class="btn btn-primary btn-lg" data-ng-click="save(job)" href="javascript:;"><span class="glyphicon " ng-class="{'glyphicon-refresh glyphicon-refresh-animate': loading,  'glyphicon-ok': !loading}"></span> Save</a> <a class="btn btn-danger btn-lg" data-ng-click="discard(job)" href="javascript:;"><span class="glyphicon glyphicon-remove-sign"></span> Discard</a></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <!--collapse start-->
+                                <div class="panel-group m-bot20" id="accordion">
+                                    <div class="panel panel-info"  style="border:1px solid #EBEBEB;">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                                    Payments
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseTwo" class="panel-collapse collapse">
+                                            <div class="panel-body PaymentTable">
+                                                <table class="table table-condensed" id="PaymentTable" data-ng-controller="paymentController" data-ng-init="loadPayment(@Url.RequestContext.RouteData.Values["id"]);">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Date</th>
+                                                            <th width="100px">Amount</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="payment in paymentModel" ng-hide="loading">
+                                                            <td>
+                                                                <span data-ng-hide="payment.editMode">
+                                                                    {{ payment.PaymentDate | date:'MMM dd, yyyy' }}
+                                                                </span>
+                                                                <div class="dropdown" data-ng-show="payment.editMode">
+                                                                    <a class="dropdown-toggle" id="PaymentDate" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                                                        <input type="text" class="form-control input-xs" data-ng-model="payment.PaymentDate" datepicker-popup="MMM dd, yyyy">
+                                                                    </a>
+                                                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                                        <datetimepicker data-ng-model="payment.PaymentDate" data-datetimepicker-config="{ startView:'day', minView:'day', dropdownSelector: '#PaymentDate' }" />
+                                                                    </ul>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <span data-ng-hide="payment.editMode">
+                                                                    {{payment.Amount | currency}}
+                                                                </span>
+                                                                <span data-ng-show="payment.editMode">
+                                                                    <input type="text" name="Amount" data-ng-model="payment.Amount" required class="form-control  input-xs col-md-1" />
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <span data-ng-hide="payment.editMode"><a data-ng-click="edit(payment)" href="javascript:;"><span class="glyphicon glyphicon-pencil col-sm-6"></span></a> <a data-ng-click="deletePayment(payment)" href="javascript:;"><span class="glyphicon glyphicon-trash" ng-show="!deleting"></span><span ng-class="{'glyphicon glyphicon-refresh glyphicon-refresh-animate': deleting}"></span></a></span>
+                                                                <span data-ng-show="payment.editMode"><span style="padding-left: 15px;padding-right: 15px;" ng-class="{'glyphicon glyphicon-refresh glyphicon-refresh-animate': saving }"></span><a data-ng-click="savePayment(payment)" href="javascript:;" ng-disabled="payment.Amount == null || payment.Width == null"><span class="glyphicon glyphicon-ok col-sm-6" ng-show="!saving"></span></a> <a data-ng-click="discard(payment)" href="javascript:;" ng-show="!saving"><span class="glyphicon glyphicon-remove-sign"></span></a></span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <div class="dropdown">
+                                                                    <a class="dropdown-toggle" id="PaymentDate" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                                                        <input type="text" class="form-control input-xs" data-ng-model="newPaymentModel.PaymentDate" datepicker-popup="MMM dd, yyyy">
+                                                                    </a>
+                                                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                                        <datetimepicker data-ng-model="newPaymentModel.PaymentDate" data-datetimepicker-config="{ startView:'day', minView:'day', dropdownSelector: '#PaymentDate' }" />
+                                                                    </ul>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <span>
+                                                                    <input type="text" name="Amount" data-ng-model="newPaymentModel.Amount" class="form-control input-xs col-md-1" />
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <button data-ng-click="addPayment(@Url.RequestContext.RouteData.Values["id"])" ng-disabled="newPaymentModel.Amount == null" class="btn btn-primary btn-xs col-md-12"><span ng-class="{'glyphicon glyphicon-refresh glyphicon-refresh-animate': adding}"></span> Add</button>&nbsp;
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-right">Total Payment:</td>
+                                                            <td colspan="2">
+                                                                {{ totalPayment() | currency }}
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tfoot>
+
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-info" style="border:1px solid #EBEBEB;">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                                    Notes
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseOne" class="panel-collapse collapse in">
+                                            <div class="panel-body">
+                                                Notes here...
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-info" style="border:1px solid #EBEBEB;">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                                                    Attachment
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="collapseThree" class="panel-collapse collapse">
+                                            <div class="panel-body profile-nav alt green-border">
+                                                <section class="panel">
+                                                    @*<ul class="nav nav-pills nav-stacked">
+                                                        <li><a> <i class="fa "></i> Before measure <button href="#" onclick="alert('Hi!')" class="label label-info pull-right r-activity">Upload</button></a></li>
+                                                        <li><a> <i class="fa "></i> On measure <button href="#" onclick="alert('Hi!')" class="label label-warning pull-right r-activity">Upload</button></a></li>
+                                                        <li><a> <i class="fa o"></i> After measure <button href="#" onclick="alert('Hi!')" class="label label-success pull-right r-activity">Upload</button></a></li>
+                                                    </ul>*@
+                                                    <ul class="task-list">
+                                                        <li>
+                                                            <div class="task-title fileupload-buttonbar">
+                                                                <span class="task-title-sp"><a id="before-measure" href="" title="Click to view the attachment.">Before Measure</a></span>
+                                                                <div class="pull-right hidden-phone">
+                                                                    <span class="btn btn-success btn-xs fileinput-button">
+                                                                        <i class=" fa fa-upload"></i>
+                                                                        <span>Upload</span>
+                                                                        <input type="file" id="before-measure" class="fupload" name="file" multiple>
+                                                                    </span>
+                                                                    <button class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="task-title fileupload-buttonbar">
+                                                                <span class="task-title-sp"><a id="on-measure" href="" title="Click to view the attachment.">On Measure</a></span>
+                                                                <div class="pull-right hidden-phone">
+                                                                    <span class="btn btn-success btn-xs fileinput-button">
+                                                                        <i class=" fa fa-upload"></i>
+                                                                        <span>Upload</span>
+                                                                        <input type="file" id="on-measure" class="fupload" name="file" multiple>
+                                                                    </span>
+                                                                    <button class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="task-title fileupload-buttonbar">
+                                                                <span class="task-title-sp"><a id="after-measure" href="" title="Click to view the attachment.">After Measure</a></span>
+                                                                <div class="pull-right hidden-phone">
+                                                                    <span class="btn btn-success btn-xs fileinput-button">
+                                                                        <i class=" fa fa-upload"></i>
+                                                                        <span>Upload</span>
+                                                                        <input type="file" id="after-measure" class="fupload" name="file" multiple>
+                                                                    </span>
+                                                                    <button class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </section>
+                                            </div>
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">Attachment Tip</h3>
+                                            </div>
+                                            <div class="panel-body">
+                                                <ul>
+                                                    <li>The maximum file size for uploads is <strong>1 MB</strong>.</li>
+                                                    <li>Only PDF file is allowed.</li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--collapse end-->
+                            </div>                        
+                        </div>
+                    </div>
+
+
+                    <div id="stone-tab" class="tab-pane ng-cloak" data-ng-controller="stoneController" data-ng-init="loadData(@Url.RequestContext.RouteData.Values["id"]);">
+                        <!--collapse start-->
+                        <div class="panel-group m-bot20 col-md-9" id="accordion" style="min-height:480px;" >
+                            <div class="panel panel-info" data-ng-repeat="stone in stoneModel">
+                                <div class="panel-heading toggler" collapse-toggler2>
+                                    <h4 class="panel-title">
+                                        <a href="" data-ng-repeat="slookup in stoneLookup | filter:{ Id: stone.StoneId }">
+                                            {{ slookup.StoneName }}
+                                        </a>
+                                        <span class="pull-right">{{stone.Subtot | currency}}</span>
+                                    </h4>
+                                </div>
+                                <div class="panel-collapse collapse" ng-class="{'in': $index == 0}">
+                                    <div class="panel-body" id="stone_{{ stone.Id }}">
+                                        <ul class="list-group stone-detail">
+                                            <li class="list-group-item col-sm-6 col-md-4" style="padding:3px 10px">
+                                                <span ng-class="{'col-md-10': stone.editMode}" class="" style="padding-right:0;padding-left:0;">
+                                                    <select name="stoneDropdown" ng-model="stone.StoneId" ng-change="findPrice(stone.StoneId);calc()" ng-disabled="!stone.editMode"
+                                                            ng-options="slookup.Id as slookup.StoneName for slookup in stoneLookup"
+                                                            @*ng-selected="slookup.Id==stone.StoneId"*@
+                                                            class="form-control" required style="padding:0;margin:0;border:none;">
+                                                    </select>
+                                                </span>
+                                                <span class="col-md-2" style="padding-left: 5px;" ng-hide="!stone.editMode">
+                                                    <button class="btn btn-sm btn-info" ng-click="loadInventoryData(stone.StoneId)" inventory-popover popover-title="Inventory Hold" popover-placement="right" popover-bodydata="InventoryPopover">
+                                                        <span class="glyphicon glyphicon-bookmark" title="Inventory Hold"></span>
+                                                    </button>
+                                                </span>
+                                            </li>
+                                            <li class="list-group-item col-sm-6 col-md-4">
+                                                <span class="pull-right" ng-hide="stone.editMode">{{ stone.Length }}</span>
+                                                <span class="pull-right" ng-show="stone.editMode">
+                                                    <input type="text" class="form-control input-xs text-right" ng-model="stone.Length" ng-change="calc()" number-only>
+                                                </span>
+                                                Length:
+                                            </li>
+                                            <li class="list-group-item col-sm-6 col-md-4">
+                                                <span class="pull-right" ng-hide="stone.editMode">{{ stone.Width }}</span>
+                                                <span class="pull-right" ng-show="stone.editMode">
+                                                    <input type="text" class="form-control input-xs text-right" ng-model="stone.Width" ng-change="calc()" number-only>
+                                                </span>
+                                                Width:
+                                            </li>
+                                            <li class="list-group-item col-sm-6 col-md-4">
+                                                <span class="pull-right">
+                                                    <select name="edgeDropdown" ng-model="stone.EdgeId" ng-change="" ng-disabled="!stone.editMode" 
+                                                            ng-options="slookup.Id as slookup.EdgeName for slookup in edgeLookup"
+                                                            @*ng-selected="slookup.Id==stone.StoneId"*@
+                                                            class="form-control input-xs" style="padding:0;width: 148px;" required>
+                                                    </select>
+                                                </span>
+                                                Edge:
+                                            </li>
+                                            <li class="list-group-item col-sm-6 col-md-4">
+                                                <span class="pull-right" ng-hide="stone.editMode">{{ stone.Surcharge }}</span>
+                                                <span class="pull-right" ng-show="stone.editMode">
+                                                    <input type="text" class="form-control input-xs text-right" ng-model="stone.Surcharge" ng-change="calc()" number-only>
+                                                </span>
+                                                Surcharge:
+                                            </li>
+                                            <li class="list-group-item col-sm-6 col-md-4">
+                                                <span class="pull-right" ng-hide="stone.editMode">{{ stone.NSlab }}</span>
+                                                <span class="pull-right" ng-show="stone.editMode">
+                                                    <input type="text" class="form-control input-xs text-right" ng-model="stone.NSlab" ng-change="calc()" number-only>
+                                                </span>
+                                                NSlab:
+                                            </li>
+                                            <li class="list-group-item col-sm-6 col-md-4">
+                                                <span class="pull-right" ng-hide="stone.editMode">{{ stone.PublishedPrice }}</span>
+                                                <span class="pull-right" ng-show="stone.editMode">
+                                                    <input type="text" class="form-control input-xs text-right" ng-model="stone.PublishedPrice" ng-change="calc()" number-only>
+                                                </span>
+                                                Published Price:
+                                            </li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right" ng-show="stone.PublishedPrice">{{ stone.Price | currency }}</span>Price:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right" ng-show="stone.Length && stone.Width">{{ stone.SquareFeet | number }}</span>Square Feet:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right">{{ stone.ExtAmt | currency }}</span>Ext. Amount:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right" ng-show="stone.StateTax && stone.Price">{{ stone.TotPricePSF | currency }}</span>Total Price PSF:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right">{{ stone.SlabPrice | currency }}</span>Slab Price:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right">{{ stone.TotSlabs | currency }}</span>Total Slabs:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right">{{ stone.Total | currency }}</span>Total:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right">{{ stone.Subtot | currency }}</span>Sub Total:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right">{{ stone.FabPrice | currency }}</span>Fab. Price:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4">
+                                                <span class="pull-right" ng-hide="stone.editMode">{{ stone.SF }}</span>
+                                                <span class="pull-right" ng-show="stone.editMode">
+                                                    <input type="text" class="SF form-control input-xs text-right" ng-model="stone.SF"  ng-change="calc()" number-only>
+                                                </span>
+                                                <span class="pull-left">
+                                                    SF: <a  ng-show="stone.editMode" href ng-click="loadMeasureData(stone.Id, @Url.RequestContext.RouteData.Values["id"])" data-toggle="popover" custom-popover popover-title="Measurements" popover-placement="right" popover-bodydata="MeasurePopover">[Measures]</a>
+                                                </span>
+
+                                            </li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right">{{ stone.SFPlus | number }}</span>SF + {{ stone.PlusVal}}%:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right">{{ stone.SubtotFab | currency }}</span>Subtotal Fab.:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4">
+                                                <span class="pull-right" ng-hide="stone.editMode">{{ stone.FabPricePrintOveride }}</span>
+                                                <span class="pull-right" ng-show="stone.editMode">
+                                                    <input type="text" class="form-control input-xs text-right" ng-model="stone.FabPricePrintOveride">
+                                                </span>
+                                                Fab Price w/ Gr:
+                                            </li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right">{{ stone.SubtotFabPrint | currency }}</span>TotFabw/Gr:</li>
+
+                                        </ul>
+                                        <div class="col-xs-12">
+                                            <p></p>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <p data-ng-hide="stone.editMode">
+                                                <a class="btn btn-success" data-ng-click="edit(stone)" href="javascript:;">
+                                                    <span class="glyphicon glyphicon-pencil"></span> Edit
+                                                </a> 
+                                                <a class="btn btn-danger" data-ng-click="delete(stone)" href="javascript:;">
+                                                    <span class="glyphicon glyphicon-trash" ng-show="!deleting"></span>
+                                                    <span ng-class="{'glyphicon glyphicon-refresh glyphicon-refresh-animate': deleting}"></span> Delete
+                                                </a>
+
+
+                                            </p>
+                                            <p data-ng-show="stone.editMode">
+                                                <a class="btn btn-primary" data-ng-click="save(stone)" href="javascript:;"><span class="glyphicon " ng-class="{'glyphicon-refresh glyphicon-refresh-animate': loading,  'glyphicon-ok': !loading}"></span> Save</a>
+                                                <a class="btn btn-warning" data-ng-click="discard(stone)" href="javascript:;"><span class="glyphicon glyphicon-remove-sign"></span> Discard</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel panel-info">
+                                <div class="panel-heading toggler" style="padding:0 0;" >
+                                    <h4 class="panel-title">
+                                        <a href="" class="btn btn-info" collapse-toggler ng-click="loadMeasureData(null, @Url.RequestContext.RouteData.Values["id"])"  custom-popover popover-title="Measurements" popover-placement="right" popover-bodydata="MeasurePopover">
+                                            <strong>Add New Stone</strong>
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div class="panel-collapse collapse">
+                                    <div class="panel-body" id="stone_null">
+                                        <ul class="list-group stone-detail">
+                                            <li class="list-group-item col-sm-6 col-md-4" style="padding:3px 10px">
+                                                <select name="stoneDropdown" ng-model="newStoneModel.StoneId" ng-change="findPrice(newStoneModel.StoneId);calc()"
+                                                        ng-options="slookup.Id as slookup.StoneName for slookup in stoneLookup"
+                                                        @*ng-selected="slookup.Id==stone.StoneId"*@
+                                                        class="form-control" required style="padding:0;margin:0;border:none;">
+                                                    <option value="" selected>Select stone here...</option>
+                                                </select>
+                                            </li>
+                                            <li class="list-group-item col-sm-6 col-md-4">
+                                                <span class="pull-right" ng-show="newStoneModel.StoneId">
+                                                    <input type="text" class="form-control input-xs text-right" ng-model="newStoneModel.Length" ng-change="calc()" number-only>
+                                                </span>
+                                                Length:
+                                            </li>
+                                            <li class="list-group-item col-sm-6 col-md-4">
+                                                <span class="pull-right" ng-show="newStoneModel.StoneId">
+                                                    <input type="text" class="form-control input-xs text-right" ng-model="newStoneModel.Width" ng-change="calc()" number-only>
+                                                </span>
+                                                Width:
+                                            </li>
+                                            <li class="list-group-item col-sm-6 col-md-4">
+                                                <span class="pull-right">
+                                                    <select name="edgeDropdown" ng-model="newStoneModel.EdgeId" ng-change=""
+                                                            ng-options="slookup.Id as slookup.EdgeName for slookup in edgeLookup"
+                                                            @*ng-selected="slookup.Id==stone.StoneId"*@
+                                                            class="form-control input-xs" style="padding:0;width: 148px;" required>
+                                                        <option value="" selected>Select edge...</option>
+                                                    </select>                                                
+                                                </span>
+                                                Edge:
+                                            </li>
+                                            <li class="list-group-item col-sm-6 col-md-4">
+                                                <span class="pull-right" ng-show="newStoneModel.StoneId">
+                                                    <input type="text" class="form-control input-xs text-right" ng-model="newStoneModel.Surcharge" ng-change="calc()" number-only>
+                                                </span>
+                                                Surcharge:
+                                            </li>
+                                            <li class="list-group-item col-sm-6 col-md-4">
+                                                <span class="pull-right">
+                                                    <input type="text" class="form-control input-xs text-right" ng-model="newStoneModel.NSlab" ng-change="calc()" number-only>
+                                                </span>
+                                                NSlab: <span ng-show="newStoneModel.NSlabSF && !newStoneModel.NSlab">[{{newStoneModel.NSlabSF}}]</span>
+                                            </li>
+                                            <li class="list-group-item col-sm-6 col-md-4">
+                                                <span class="pull-right" ng-show="newStoneModel.StoneId">
+                                                    <input type="text" class="form-control input-xs text-right" ng-model="newStoneModel.PublishedPrice" ng-change="calc()" number-only>
+                                                </span>
+                                                Published Price:
+                                            </li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right" ng-show="newStoneModel.StoneId && newStoneModel.PublishedPrice">{{ newStoneModel.Price | currency }}</span>Price:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right" ng-show="newStoneModel.StoneId && newStoneModel.Length && newStoneModel.Width">{{ newStoneModel.SquareFeet | number }}</span>Square Feet:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right" ng-show="newStoneModel.StoneId && newStoneModel.Price">{{ newStoneModel.ExtAmt | currency }}</span>Ext. Amount:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right" ng-show="newStoneModel.StoneId && newStoneModel.Price">{{ newStoneModel.TotPricePSF | currency }}</span>Total Price PSF<span ng-show="newStoneModel.Price"> x {{ newStoneModel.StateTax}}</span>:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right" ng-show="newStoneModel.StoneId">{{ newStoneModel.SlabPrice | currency }}</span>Slab Price:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right" ng-show="newStoneModel.StoneId">{{ newStoneModel.TotSlabs | currency }}</span>Total Slabs:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right" ng-show="newStoneModel.StoneId">{{ newStoneModel.Total | currency }}</span>Total:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right" ng-show="newStoneModel.StoneId">{{ newStoneModel.Subtot | currency }}</span>Sub Total:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right" ng-show="newStoneModel.StoneId">{{ newStoneModel.FabPrice | currency }}</span>Fab. Price:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4">
+                                                <span class="pull-right">
+                                                    <input type="text" class="SF form-control input-xs text-right" ng-model="newStoneModel.SF" ng-change="calc()" number-only>
+                                                </span>
+                                                <span class="pull-left">
+                                                    SF: <a href ng-click="loadMeasureData(null, @Url.RequestContext.RouteData.Values["id"])" data-toggle="popover" custom-popover popover-title="Measurements" popover-placement="right" popover-bodydata="MeasurePopover">[Measures]</a>
+                                                </span>
+                                            </li>
+
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right">{{ newStoneModel.SFPlus | number }}</span>SF + {{ newStoneModel.PlusVal}}%:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right" ng-show="newStoneModel.StoneId">{{ newStoneModel.SubtotFab | currency }}</span>Subtotal Fab.:</li>
+                                            <li class="list-group-item col-sm-6 col-md-4">
+                                                <span class="pull-right" ng-show="newStoneModel.StoneId">
+                                                    <input type="text" class="form-control input-xs text-right" ng-model="newStoneModel.FabPricePrintOveride">
+                                                </span>
+                                                Fab Price w/ Gr:
+                                            </li>
+                                            <li class="list-group-item col-sm-6 col-md-4"><span class="pull-right" ng-show="newStoneModel.StoneId">{{ newStoneModel.SubtotFabPrint | currency }}</span>TotFabw/Gr:</li>
+
+                                        </ul>
+                                        <div class="col-xs-12">
+                                            <p></p>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <p>
+                                                <button data-ng-click="add(@Url.RequestContext.RouteData.Values["id"])" ng-disabled="newStoneModel.StoneId == null" class="btn btn-primary col-xs-4 col-sm-1"><span ng-class="{'glyphicon glyphicon-refresh glyphicon-refresh-animate': loading}"></span> Add</button>&nbsp;&nbsp;
+                                                <button data-ng-click="reset()" class="btn btn-default">Cancel</button>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                                <!--collapse end-->
+                        <div class="row state-overview">
+                            <div class="col-lg-3 col-sm-6">
+                                <section class="panel" style="border:1px solid #EBEBEB;">
+                                    <div class="symbol yellow">
+                                        <i class="fa fa-usd"></i>
+                                    </div>
+                                    <div class="value">
+                                        <h1 class=" count3">{{total() | currency}}</h1>
+                                        <p>Subtotal</p>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="col-lg-3 col-sm-6">
+                                <section class="panel" style="border:1px solid #EBEBEB;">
+                                    <div class="symbol blue">
+                                        <i class="fa fa-expand"></i>
+                                    </div>
+                                    <div class="value">
+                                        <h1 class=" count4">{{totalSF()}}</h1>
+                                        <p>Grant Total SF</p>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+
+                     </div>
+
+                            
+                    
+
+                    <div id="MeasurePopover" class="hidden" data-ng-controller="measureController">
+                        <table class="table table-condensed" id="MeasureTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Measure&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                    <th>Length</th>
+                                    <th>Width&nbsp;</th>
+                                    <th>Area&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                    <th>{{ stone.Id }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="measure in measureModel" ng-hide="loading">
+                                    <td>{{ $index + 1}}</td>
+                                    <td>
+                                        <span data-ng-hide="measure.editMode">
+                                            <input type="text" name="MeasureName" data-ng-model="measure.MeasureName" readonly class="form-control input-xs col-md-1" />
+                                        </span>
+                                        <span data-ng-show="measure.editMode">
+                                            <measure-lookup data-model="measure.MeasureName" data-edit="true"></measure-lookup>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span data-ng-hide="measure.editMode">
+                                            <input type="text" name="Length" data-ng-model="measure.Length" readonly class="form-control input-xs col-md-1" />
+                                        </span>
+                                        <span data-ng-show="measure.editMode">
+                                            <input type="text" name="Length" data-ng-model="measure.Length" required class="form-control input-xs col-md-1" />
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span data-ng-hide="measure.editMode">
+                                            <input type="text" name="Width" data-ng-model="measure.Width" readonly class="form-control input-xs col-md-1" />
+                                        </span>
+                                        <span data-ng-show="measure.editMode">
+                                            <input type="text" name="Width" data-ng-model="measure.Width" required class="form-control input-xs col-md-1" />
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <input type="text" name="Area" value="{{measure.Length * measure.Width / 144  | number:3 }}" readonly class="form-control input-xs col-md-2" />
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span data-ng-hide="measure.editMode"><a data-ng-click="edit(measure)" href="javascript:;"><span class="glyphicon glyphicon-pencil col-sm-6"></span></a> <a data-ng-click="deleteMeasure(measure)" href="javascript:;"><span class="glyphicon glyphicon-trash" ng-show="!deleting"></span><span ng-class="{'glyphicon glyphicon-refresh glyphicon-refresh-animate': deleting}"></span></a></span>
+                                        <span data-ng-show="measure.editMode"><span style="padding-left: 15px;padding-right: 15px;" ng-class="{'glyphicon glyphicon-refresh glyphicon-refresh-animate': saving }"></span><a data-ng-click="saveMeasure(measure)" href="javascript:;" ng-disabled="measure.Length == null || measure.Width == null"><span class="glyphicon glyphicon-ok col-sm-6" ng-show="!saving"></span></a> <a data-ng-click="discard(measure)" href="javascript:;" ng-show="!saving"><span class="glyphicon glyphicon-remove-sign"></span></a></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <span>
+                                            <input type="text" name="MeasureName" data-ng-model="newMeasureModel.MeasureName" typeahead="object.MeasureName for object in measureLookup | filter:$viewValue | limitTo:8" class="form-control input-xs col-md-1" />
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <input type="text" name="Length" data-ng-model="newMeasureModel.Length" class="form-control input-xs col-md-1" />
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <input type="text" name="Width" data-ng-model="newMeasureModel.Width" class="form-control input-xs col-md-1" />
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <input type="text" name="Area" value="{{newMeasureModel.Length * newMeasureModel.Width / 144 | number:3 }}" readonly class="form-control input-xs col-md-2" />
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button data-ng-click="addMeasure(@Url.RequestContext.RouteData.Values["id"])" ng-disabled="newMeasureModel.Length == null || newMeasureModel.Width == null" class="btn btn-primary btn-xs col-md-12"><span ng-class="{'glyphicon glyphicon-refresh glyphicon-refresh-animate': adding}"></span> Add</button>&nbsp;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td colspan="2">
+                                        Total SF: {{ totalArea() | number:3 }}
+                                    </td>
+                                    <td colspan="2">
+                                        Total SF + %:
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div id="InventoryPopover" class="hidden" data-ng-controller="inventoryController" >
+                        <table class="table table-condensed table-bordered" id="InventoryTable" style="width:720px;">
+                            <thead>
+                                <tr>
+                                    <th>Stone</th>
+                                    <th>Serial No</th>
+                                    <th>Length</th>
+                                    <th>Width&nbsp;</th>
+                                    <th>Lot No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                    <th>Vendor</th>
+                                    <th>Cons</th>
+                                    <th>Hold</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="inventory in inventoryModel">
+                                    <td>{{ inventory.StoneName }}</td>
+                                    <td>{{ inventory.SerialNo }}</td>
+                                    <td>{{ inventory.Length }}</td>
+                                    <td>{{ inventory.Width }}</td>
+                                    <td>{{ inventory.LotNo }}</td>
+                                    <td>{{ inventory.VendorName }}</td>
+                                    <td><span ng-show="inventory.Consignment == true" title="Consignment" class="fa fa-check"></span></td>
+                                    <td>
+                                        <button class="btn btn-xs" ng-class="{'btn-success' : inventory.QuoteId == null || inventory.QuoteId == @Url.RequestContext.RouteData.Values["id"], 'btn-danger' : inventory.QuoteId != null && inventory.QuoteId != @Url.RequestContext.RouteData.Values["id"]}" ng-click="holdInventory(@Url.RequestContext.RouteData.Values["id"])" ng-disabled="inventory.QuoteId != null && inventory.QuoteId != @Url.RequestContext.RouteData.Values["id"]">
+                                            {{ inventory.QuoteId == null ? 'Hold' : 'Unhold' }}
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+
+                            </tfoot>
+                        </table>
+                    </div>
+
+
+                            <div id="sink-tab" class="tab-pane ng-cloak" data-ng-controller="sinkController" data-ng-init="loadData(@Url.RequestContext.RouteData.Values["id"]);">
+                                <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)" class="ng-alert-fadeOut">{{alert.msg}}</alert>
+                                <div class="panel-group m-bot20 col-md-9">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Catalog</th>
+                                                    <th>Sink</th>
+                                                    <th>Quantity</th>
+                                                    <th>Price</th>
+                                                    <th>Amount</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr data-ng-repeat="sink in sinkModel">
+                                                    <td>
+                                                        <span data-ng-hide="sink.editMode">{{ sink.CatalogID }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span data-ng-hide="sink.editMode">{{ sink.SinkName }}</span>
+                                                        <span data-ng-show="sink.editMode">
+                                                            @*<select ng-model="sink.SinkId" class="dropdown form-control" ng-change="sinkChange()" required>
+                                                <option ng-repeat="slookup in sinkLookup"
+                                                        value="{{slookup.Id}}" ng-selected="slookup.Id==sink.SinkId">
+                                                    {{slookup.Name}}
+                                                </option>
+                                            </select>*@
+                                                            <select name="sinkDropdown" ng-model="sink.SinkId"
+                                                                    ng-options="slookup.Id as slookup.Name for slookup in sinkLookup"
+                                                                    ng-selected="slookup.Id==sink.SinkId"
+                                                                    class="dropdown form-control" required></select>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span data-ng-hide="sink.editMode">{{ sink.Quantity }}</span>
+                                                        <span data-ng-show="sink.editMode">
+                                                            <input type="text" name="Quantity" data-ng-model="sink.Quantity" required class="form-control" style="max-width:80px;" />
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span data-ng-hide="sink.editMode">{{ sink.Price }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span data-ng-hide="sink.editMode">{{ sink.Price * sink.Quantity }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span data-ng-hide="sink.editMode"><a data-ng-click="edit(sink)" href="javascript:;"><span class="glyphicon glyphicon-pencil col-sm-6"></span></a> <a data-ng-click="delete(sink)" href="javascript:;"><span class="glyphicon glyphicon-trash" ng-show="!deleting"></span><span ng-class="{'glyphicon glyphicon-refresh glyphicon-refresh-animate': deleting}"></span></a></span>
+                                                        <span data-ng-show="sink.editMode"><span style="padding-left: 15px;padding-right: 15px;" ng-class="{'glyphicon glyphicon-refresh glyphicon-refresh-animate': saving}"></span><a data-ng-click="save(sink)" href="javascript:;"><span class="glyphicon glyphicon-ok col-sm-6" ng-show="!saving"></span></a> <a data-ng-click="discard(sink)" href="javascript:;" ng-show="!saving"><span class="glyphicon glyphicon-remove-sign"></span></a></span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td>
+                                                        <span ng-hide="newSinkModel.SinkId == null">{{ newSinkModel.CatalogID }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <select ng-model="newSinkModel.SinkId" ng-change="findPrice(newSinkModel.SinkId)" class="dropdown form-control" required>
+                                                            <option value="" selected>-- Choose sink --</option>
+                                                            <option ng-repeat="slookup in sinkLookup"
+                                                                    value="{{slookup.Id}}">
+                                                                {{slookup.Name}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="Quantity" data-ng-model="newSinkModel.Quantity" required class="form-control" style="max-width:80px;" />
+                                                    </td>
+                                                    <td>
+                                                        <span ng-hide="newSinkModel.SinkId == null">{{ newSinkModel.Price }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span ng-hide="newSinkModel.SinkId == null || newSinkModel.Quantity == null">{{ newSinkModel.Price * newSinkModel.Quantity }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <button data-ng-click="add(@Url.RequestContext.RouteData.Values["id"])" ng-disabled="newSinkModel.SinkId == null || newSinkModel.Quantity == null" class="btn btn-primary col-md-5"><span ng-class="{'glyphicon glyphicon-refresh glyphicon-refresh-animate': adding}"></span> Add</button>&nbsp;
+                                                        <button data-ng-click="reset()" class="btn btn-default">Cancel</button>
+                                                    </td>
+
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row state-overview">
+                                    <div class="col-lg-3 col-sm-6">
+                                        <section class="panel" style="border:1px solid #EBEBEB;">
+                                            <div class="symbol yellow">
+                                                <i class="fa fa-usd"></i>
+                                            </div>
+                                            <div class="value">
+                                                <h1 class=" count3">{{total() | currency}}</h1>
+                                                <p>Total Sink</p>
+                                            </div>
+                                        </section>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="service-tab" class="tab-pane ng-cloak" data-ng-controller="serviceController" data-ng-init="loadData(@Url.RequestContext.RouteData.Values["id"]);">
+                                <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)" class="ng-alert-fadeOut">{{alert.msg}}</alert>
+                                <div class="panel-group m-bot20 col-md-9">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Service</th>
+                                                    <th>Quantity</th>
+                                                    <th>Price</th>
+                                                    <th>Amount</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr data-ng-repeat="service in serviceModel">
+                                                    <td>
+                                                        <span data-ng-hide="service.editMode">{{ service.ServiceName }}</span>
+                                                        <span data-ng-show="service.editMode">
+                                                            <select name="serviceDropdown" ng-model="service.ServiceId" ng-change="findPrice(service.ServiceId)" 
+                                                                    ng-options="slookup.Id as slookup.Name for slookup in serviceLookup"
+                                                                    ng-selected="slookup.Id==service.ServiceId"
+                                                                    class="dropdown form-control" required></select>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span ng-hide="(!service.editMode) || (service.ServiceId == null || service.ServiceCode != 'Q')">
+                                                            <input type="text" name="Quantity" data-ng-model="service.Quantity" required class="form-control" placeholder="Enter amount here" />
+                                                        </span>
+                                                        <span ng-hide="service.editMode && (service.ServiceId == null || service.ServiceCode == 'Q')">{{ service.Quantity }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span ng-hide="service.ServiceId == null">{{ service.Price | currency }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span ng-hide="service.ServiceId == null || service.Quantity == null">{{ service.Price * service.Quantity | currency }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span data-ng-hide="service.editMode"><a data-ng-click="edit(service)" href="javascript:;"><span class="glyphicon glyphicon-pencil col-sm-6"></span></a> <a data-ng-click="delete(service)" href="javascript:;"><span class="glyphicon glyphicon-trash" ng-show="!deleting"></span><span ng-class="{'glyphicon glyphicon-refresh glyphicon-refresh-animate': deleting}"></span></a></span>
+                                                        <span data-ng-show="service.editMode"><span style="padding-left: 15px;padding-right: 15px;" ng-class="{'glyphicon glyphicon-refresh glyphicon-refresh-animate': saving}"></span><a data-ng-click="save(service)" href="javascript:;" a-disabled="service.ServiceId == null || service.Quantity == null"><span class="glyphicon glyphicon-ok col-sm-6" ng-show="!saving"></span></a> <a data-ng-click="discard(service)" href="javascript:;" ng-show="!saving"><span class="glyphicon glyphicon-remove-sign"></span></a></span>
+
+                                                    </td>
+                                                </tr>
+                                                <tr data-ng-repeat="service in serviceEdgeModel">
+                                                    <td>
+                                                        <span data-ng-hide="service.editMode">{{ service.ServiceName }}</span>
+                                                        <span data-ng-show="service.editMode">
+                                                            <select name="serviceDropdown" ng-model="service.ServiceId"
+                                                                    ng-options="slookup.Id as slookup.Name for slookup in serviceLookup"
+                                                                    ng-selected="slookup.Id==service.ServiceId"
+                                                                    class="dropdown form-control" required></select>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span data-ng-hide="service.editMode">{{ service.Quantity }}</span>
+                                                        <span data-ng-show="service.editMode">
+                                                            <input type="text" name="Quantity" data-ng-model="service.Quantity" required class="form-control" />
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span data-ng-hide="service.editMode">{{ service.Price | currency }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span data-ng-hide="service.editMode">{{ service.Price * service.Quantity | currency }}</span>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td>
+                                                        <select ng-model="newServiceModel.ServiceId" ng-change="findPrice(newServiceModel.ServiceId)" class="dropdown form-control" required>
+                                                            <option value="" selected>-- Choose service --</option>
+                                                            <option ng-repeat="slookup in serviceLookup" value="{{slookup.Id}}"> {{slookup.Name}}</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <span ng-hide="newServiceModel.ServiceId == null || newServiceModel.ServiceCode != 'Q'">
+                                                            <input type="text" name="Quantity" data-ng-model="newServiceModel.Quantity" required class="form-control" placeholder="Enter amount here" />
+                                                        </span>                                                    
+                                                        <span ng-hide="newServiceModel.ServiceId == null || newServiceModel.ServiceCode == 'Q'">{{ newServiceModel.Quantity }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span ng-hide="newServiceModel.ServiceId == null">{{ newServiceModel.Price | currency }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span ng-hide="newServiceModel.ServiceId == null || newServiceModel.Quantity == null">{{ newServiceModel.Price * newServiceModel.Quantity | currency }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <button data-ng-click="add(@Url.RequestContext.RouteData.Values["id"])" ng-disabled="newServiceModel.ServiceId == null || newServiceModel.Quantity == null" class="btn btn-primary col-md-5"><span ng-class="{'glyphicon glyphicon-refresh glyphicon-refresh-animate': adding}"></span> Add</button>&nbsp;
+                                                        <button data-ng-click="reset()" class="btn btn-default">Cancel</button>
+                                                    </td>
+
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row state-overview">
+                                    <div class="col-lg-3 col-sm-6">
+                                        <section class="panel" style="border:1px solid #EBEBEB;">
+                                            <div class="symbol yellow">
+                                                <i class="fa fa-usd"></i>
+                                            </div>
+                                            <div class="value">
+                                                <h1 class=" count3">{{total() | currency}}</h1>
+                                                <p>Total Service</p>
+                                            </div>
+                                        </section>
+                                    </div>
+                                </div>
+
+                            </div>
+
+            <div id="preview-tab">
+                @*<iframe src="@Url.Content("~/Attachment/qwg.pdf")" width="800px" height="600px" />*@
+                <div id="pdfRenderer"></div>
+            </div>
+
+
+                        </div>
+            </div>
+    </div>
+</section>
+
+@section scripts
+{
+    @*<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-animate.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.11.0/ui-bootstrap-tpls.min.js"></script>*@
+    <script src="@Url.Content("~/Scripts/moment.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/angular.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/angular-animate.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/ui-bootstrap-tpls.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/ng-alert-service.js")"></script>
+    <script src="@Url.Content("~/Scripts/showErrors.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/Appjs/ng-quote.js")"></script>
+<script src="@Url.Content("~/Scripts/Appjs/ng-job.js")"></script>
+    <script src="@Url.Content("~/Scripts/Appjs/ng-sink.js")"></script>
+<script src="@Url.Content("~/Scripts/Appjs/ng-service.js")"></script>
+<script src="@Url.Content("~/Scripts/Appjs/ng-history.js")"></script>
+<script src="@Url.Content("~/Scripts/Appjs/ng-payment.js")"></script>
+<script src="@Url.Content("~/Scripts/Appjs/ng-stone.js")"></script>
+<script src="@Url.Content("~/Scripts/Appjs/ng-measure.js")"></script>
+<script src="@Url.Content("~/Scripts/Appjs/ng-inventory.js")"></script>
+<script src="@Url.Content("~/Scripts/datetimepicker.js")"></script>
+<script src="@Url.Content("~/Scripts/pdfobject.js")"></script>
+
+
+<script type="text/javascript">
+    $('.fileinput-button').on('change', '.fupload', function () {
+        var quoteId = @Url.RequestContext.RouteData.Values["id"];
+        var sendAs = $(event.target).attr('id');
+        var files = $(event.target).get(0).files;
+        if (files.length > 0) {
+            if (this.value.lastIndexOf('.pdf') === -1) {
+                alert('Only pdf files are allowed!');
+                this.value = '';
+                return;
+            }
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                data.append("UploadedFile", files[0]);
+                $(sendAs).removeClass("fa fa-upload").addClass("glyphicon-refresh glyphicon-refresh-animate");
+                $.ajax({
+                    type: "POST",
+                    url: '/api/job/UploadFile?QuoteId=' + quoteId + "&SendAs=" + sendAs,
+                    contentType: false,
+                    processData: false,
+                    data: data,
+                    success: function (result) {
+                        alert(result);
+                        $(sendAs).removeClass("glyphicon-refresh glyphicon-refresh-animate").addClass("fa fa-upload");
+                    },
+                    error: function (xhr, status, p3, p4) {
+                        var err = "Error " + " " + status + " " + p3 + " " + p4;
+                        if (xhr.responseText && xhr.responseText[0] == "{")
+                            err = JSON.parse(xhr.responseText).Message;
+                        alert(err);
+                    }
+                });
+            } else {
+                alert("This browser doesn't support HTML5 file uploads!");
+            }
+        }
+    });
+
+    $('.fileupload-buttonbar').on('click', '.task-title-sp a', function () {
+        var sendAs = $(event.target).attr('id');
+        var link = '@Url.Content("~/Attachment/")@Url.RequestContext.RouteData.Values["id"]' + '_' + sendAs + '.pdf';
+        var w = window.open( link, '_blank'  );
+        $.ajax({
+            url: link,
+            type:'HEAD',
+            error: function()
+            {
+                w.close();
+                alert(sendAs + ".pdf does not exist. Please upload a new one.")
+            },
+            success: function()
+            {
+                w = window.open(link, '_blank');
+            }
+        });
+    });
+
+</script>
+
+    <script>
+        var pdf = new PDFObject({
+            url: "@Url.Content("~/Attachment/qwg.pdf")",
+            id: "pdfRendered",
+            pdfOpenParams: {
+                view: "FitH"
+            }
+        }).embed("pdfRenderer");
+    </script>
+
+}

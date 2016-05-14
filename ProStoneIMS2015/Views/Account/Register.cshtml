@@ -1,0 +1,57 @@
+﻿@model ProStoneIMS2015.Models.RegisterViewModel
+@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+    ViewBag.Title = "Register";
+}
+
+@section customcss{
+    <style>
+         body {
+            padding-top: 1px !important; 
+        }
+        .field-validation-error {
+            font-size: x-small;
+        }
+    </style>
+}
+
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-signin", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <h2 class="form-signin-heading">register now</h2>
+        <div class="login-wrap">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger text-center" })
+
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.Email), autofocus = "autofocus" })
+            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.Password) })
+            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+
+            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.ConfirmPassword) })
+            @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+
+            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.FirstName) })
+            @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger" })
+
+            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.LastName) })
+            @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger" })
+
+            @Html.TextBoxFor(m => m.SubscriberKey, new { @class = "form-control", placeholder = @Html.DisplayNameFor(m => m.SubscriberKey) })
+            @Html.ValidationMessageFor(m => m.SubscriberKey, "", new { @class = "text-danger" })
+
+            <label class="checkbox">
+                <input type="checkbox" value="agree this condition"> I agree to the Terms of Service and Privacy Policy
+            </label>
+            <input type="submit" value="Register" class="btn btn-lg btn-login btn-block" />
+            <div class="registration">
+                Already Registered.
+                @Html.ActionLink("Login", "Login")
+            </div>
+
+        </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

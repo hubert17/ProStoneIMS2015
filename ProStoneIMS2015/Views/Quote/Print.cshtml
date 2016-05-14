@@ -1,0 +1,152 @@
+﻿@model ProStoneIMS2015.Models.PrintQuoteVM
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Print</title>
+
+    @Styles.Render("~/Content/admincss")
+
+    @Scripts.Render("~/bundles/modernizr")
+
+    <!-- js placed at the end of the document so the pages load faster BUT PUTTING THIS ON HEAD ELEMENT ENSURES FUNCTIONALITY! -->
+    @Scripts.Render("~/bundles/jquery")
+</head>
+<body>
+    <div class="container" style="max-width:960px;">
+        <div class="row">
+            <header>
+                <div class="col-sm-12">
+                    <h2>WHOLESALE GRANITE DFW</h2>
+                    <p>
+                        <em>
+                            10011 Harmon Road, Unit 101, Fort Worth Texas 76177<br />
+                            Tel: (817) 300­-3298 &nbsp;&nbsp;&nbsp; Email: info@granitesouthlake.com<br />
+                        </em>
+                    </p>
+                    <h1><strong>JOB QUOTE</strong></h1>
+                </div>
+            </header>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <table class="table">
+                    <tr>
+                        <td class="collabel">QUOTE #:</td>
+                        <td><strong>@Model.Id</strong></td>
+                    </tr>
+                    <tr>
+                        <td>CUSTOMER:</td>
+                        <td><strong>@Model.CustomerName</strong></td>
+                    </tr>
+                    <tr>
+                        <td>PHONE:</td>
+                        <td>@Model.Phone</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <table class="table">
+                    <tr>
+                        <td class="collabel">ADDRESS:<strong>&nbsp;</strong></td>
+                        <td>@Model.Address</td>
+                    </tr>
+                    <tr>
+                        <td><strong>&nbsp;</strong></td>
+                        <td>@Model.Address2</td>
+                    </tr>
+                    <tr>
+                        <td>EMAIL:</td>
+                        <td>@Model.Email</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="col-sm-12 tbl-header">
+                    <h2>Slab</h2>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>STONE</th>
+                            <th width="20%">SLAB NO</th>
+                            <th width="20%">SERIAL NO</th>
+                            <th width="20%">EDGE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Slab)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item.SlabNo</td>
+                                <td>@item.SerialNo</td>
+                                <td>@item.Catalog</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="col-sm-12 tbl-header">
+                    <h2>Sinks</h2>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>SINK</th>
+                            <th width="30%">CATALOG</th>
+                            <th class="text-center" width="30%">QUANTITY</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Sink)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item.Catalog</td>
+                                <td class="text-center">@item.Quantity</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr style="font-size:large;">
+                            <td class="no-border" width="50%">NOTES: <p style="font-size:large;line-height:20px">@Model.Notes </p></td>
+                            <td class="no-border text-right">
+                                <strong>TOTAL COST:</strong>
+                                @*<span style="display:@ViewBag.AdminView"><strong>DEPOSIT:</strong></span>
+                                    <span style="display:@ViewBag.AdminView"><strong>AMOUNT DUE:	</strong></span>*@
+                            </td>
+                            <td class="no-border text-right">
+                                <strong>@String.Format("{0:c}", Model.TotalCost)</strong>
+                                @*<span style="display:@ViewBag.AdminView"><strong>@String.Format("{0:c}", Model.TotalDeposit)</strong></span>
+                                    <span style="display:@ViewBag.AdminView"><strong>@String.Format("{0:c}", Model.AmountDue)</strong></span>*@
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+    @Scripts.Render("~/bundles/bootstrap")
+</body>
+</html>

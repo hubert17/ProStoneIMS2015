@@ -1,0 +1,257 @@
+﻿@{
+
+    ViewBag.Title = "Task Status";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@section customcss{
+    @*<link href="@Url.Content("~/Content/bootstrap-theme.min.css")" rel="stylesheet" type="text/css">*@
+    <link href="@Url.Content("~/Content/grid-0.5.6.css")" rel="stylesheet" type="text/css">
+
+    <style>
+        .input-xs {
+            height: 22px !important;
+            padding: 2px 5px !important;
+            font-size: 12px !important;
+            line-height: 1.5 !important;
+            border-radius: 3px !important;
+        }
+
+        .clsDatePicker {
+            z-index: 100000 !important;
+        }
+
+        #filter {
+            padding-right: 26px !important;
+        }
+
+        .input-group-btn {
+            position: relative;
+        }
+
+            .input-group-btn a.btn {
+                position: absolute;
+                right: 36px;
+                top: 0px;
+                z-index: 500;
+            }
+
+                .input-group-btn a.btn:hover,
+                .input-group-btn a.btn:active {
+                    box-shadow: none;
+                }
+    </style>
+
+    <style>
+        .tt-query {
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        }
+
+        .tt-hint {
+            color: #999;
+        }
+
+        .tt-menu {
+            top: 30px !important;
+            max-width: 422px;
+            margin-top: 4px;
+            padding: 4px 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+            -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+            box-shadow: 0 5px 10px rgba(0,0,0,.2);
+        }
+
+        .tt-suggestion {
+            padding: 3px 20px;
+            line-height: 24px;
+        }
+
+            .tt-suggestion.tt-cursor, .tt-suggestion:hover {
+                color: #fff;
+                background-color: #0097cf;
+            }
+
+            .tt-suggestion p {
+                margin: 0;
+            }
+
+        span.twitter-typeahead {
+            width: 100%;
+        }
+
+        .input-group span.twitter-typeahead {
+            display: block !important;
+        }
+
+            .input-group span.twitter-typeahead .tt-dropdown-menu {
+                top: 32px !important;
+            }
+
+        .input-group.input-group-lg span.twitter-typeahead .tt-dropdown-menu {
+            top: 44px !important;
+        }
+
+        .input-group.input-group-sm span.twitter-typeahead .tt-dropdown-menu {
+            top: 28px !important;
+        }
+        .table > tbody > tr {
+          cursor: pointer;
+        }
+    </style>
+}
+
+
+
+
+<div class="container fill">
+    <h2>Task Status</h2>
+    <br />
+
+    <div class="row">
+        <form class="col-xs-9 col-sm-6 col-md-4 col-lg-4 form-group has-feedback has-clear">
+            <div class="input-group">
+                <span style="position:relative;" class="add-clear-span">
+                    <input type="text"
+                           id="search"
+                           name="search"
+                           value="@ViewBag.filter"
+                           class="typeahead form-control"
+                           style="display: inline"
+                           placeholder="Search" />
+                </span>
+                <span class="input-group-btn">
+                    <a id="clearFilter" class="btn" style="color: rgb(204, 204, 204); text-decoration: none; "><i class="fa fa-times"></i></a>
+                    <button type="submit" name="search" id="search-btn" class="btn btn-info"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </form>
+    </div>
+    <table id="grid"></table>
+
+</div>
+
+
+
+@section scripts{
+    <script src="@Url.Content("~/Scripts/grid-0.5.6.js")" type="text/javascript"></script>
+
+    <script>
+            var grid;
+
+            function Search() {
+                grid.reload({ searchString: $("#search").val() });
+            }
+
+            $(document).ready(function () {
+                grid = $("#grid").grid({
+                    dataSource: "@Url.Action("GetTaskStatus", "TaskStatus")",
+                    dataKey: "Id",
+                    uiLibrary: "bootstrap",
+                    columns: [
+                        { title: "Customer", tmpl: "@Html.Raw("<a style='width:100%' href='" + Url.Action("EditWizard", "Quote") + "/{Id}' title='{Address}'> {FirstName} {LastName} </a>")" },
+                        { field: "DateCreated", title: "Create Date", type: "date", sortable: true },
+                        { field: "TaskDate", title: "Task Date", type: "date", sortable: true },
+
+                    ],
+                    pager: { enable: true, limit: 20, sizes: [10, 20, 50, 100] }
+                });
+
+                grid.on("rowSelect", function (e, $row, id, record) {
+                    //alert('Row with id=' + id + ' is selected.');
+                    window.location = '@Url.Action("EditWizard", "Quote")' + '/' + id;
+                });
+
+                setTypeAhead('#search');
+
+            });
+
+
+            //$("#btnSave").on("click", Save);
+            $("#clearFilter").on("click", function () {
+                $("#grid td.consign > div").html('');
+                grid.reload({ searchString: null });
+                $("#grid td.consign > div").each(function () {
+                    if ($(this).attr('title') == 'true') {
+                        $(this).html('<span title="Consignment" class="fa fa-check"></span>');
+                    }
+                    else {
+                        $(this).html('');
+                    }
+                });
+                $('#search').val('').focus();
+            });
+            $("form").submit(function (e) {
+                Search();
+                e.preventDefault();
+            });
+
+
+    </script>
+
+    <script src="@Url.Content("~/Scripts/typeahead.jquery.min.js")" type="text/javascript"></script>
+
+
+    @*<script>
+            $('.typeahead').typeahead({
+                source: function (query, process) {
+                    return $.get('@Url.Content("~/Inventory/StoneLookup")', { query: query }, function (data) {
+                        return process(data);
+                    });
+                }
+            });
+        </script>*@
+
+    <script>
+            var substringMatcher = function (strs) {
+                return function findMatches(q, cb) {
+                    var matches, substringRegex;
+
+                    // an array that will be populated with substring matches
+                    matches = [];
+
+                    // regex used to determine if a string contains the substring `q`
+                    substrRegex = new RegExp(q, 'i');
+
+                    // iterate through the pool of strings and for any string that
+                    // contains the substring `q`, add it to the `matches` array
+                    $.each(strs, function (i, str) {
+                        if (substrRegex.test(str)) {
+                            matches.push(str);
+                        }
+                    });
+
+                    cb(matches);
+                };
+            };
+
+            var lookup = ['@Html.Raw(ViewBag.Typeahead)'];
+
+            @*@foreach (var d in ViewBag.StoneLookup)
+            {
+                @:stones.push("@d");
+            }*@
+
+            var setTypeAhead = function (o) {
+                $(o).typeahead({
+                    hint: true,
+                    highlight: true,
+                    minLength: 1
+                },
+                {
+                    name: 'lookup',
+                    source: substringMatcher(lookup)
+                });
+            }
+
+
+    </script>
+}

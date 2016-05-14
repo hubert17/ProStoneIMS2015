@@ -1,0 +1,233 @@
+﻿@model ProStoneIMS2015.Models.QouteViewModel
+@{
+    if (Request.IsAuthenticated && User.IsInRole("admin"))
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else if (Request.IsAuthenticated && User.IsInRole("subscriber"))
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else if (Request.IsAuthenticated)
+    {
+        Layout = "~/Views/Shared/_UserLayout.cshtml";
+    }
+
+    ViewBag.Title = "Home Page";
+}
+
+@section customcss{
+    <style>
+        .wrapper {
+            background: url(https://drive.google.com/uc?export=download&id=0B1xsibA--2-HRXlPX0pJQUZHbUU) no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='https://drive.google.com/uc?export=download&id=0B1xsibA--2-HRXlPX0pJQUZHbUU',     sizingMethod='scale');
+            -ms-filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='https://drive.google.com/uc?export=download&id=0B1xsibA--2-HRXlPX0pJQUZHbUU', sizingMethod='scale');
+        }
+
+        .dropdown-menu.extended {
+    max-width: 300px !important;
+    min-width: 160px !important;
+    top: 42px;
+    width: 235px !important;
+    padding: 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.176) !important;
+    border: none !important;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+    @@media screen and (-webkit-min-device-pixel-ratio:0) {
+        /* Safari and Chrome */
+        .dropdown-menu.extended  {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.176) !important;
+        }
+   }
+
+.dropdown-menu.extended li p {
+    background-color: #F1F2F7;
+    color: #666666;
+    margin: 0;
+    padding: 10px;
+    border-radius: 4px 4px 0px 0px;
+    -webkit-border-radius: 4px 4px 0px 0px;
+    font-weight:bold;
+}
+
+.dropdown-menu.extended li p.green {
+    background-color: #a9d86e;
+    color: #fff;
+}
+
+.dropdown-menu.extended li p.red {
+    background-color: #ff6c60;
+    color: #fff;
+}
+
+.dropdown-menu.extended li p.yellow {
+    background-color: #fcb322;
+    color: #fff;
+}
+
+.dropdown-menu.extended li a {
+    border-bottom: 1px solid #EBEBEB !important;
+    font-size: 12px;
+    list-style: none;
+}
+
+.dropdown-menu.extended li a {
+    padding: 15px 10px !important;
+    width: 100%;
+    display: inline-block;
+}
+
+.dropdown-menu.extended li a:hover {
+    background-color: #F7F8F9 !important;
+    color: #2E2E2E;
+}
+
+.dropdown-menu.tasks-bar .task-info .desc {
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.dropdown-menu.tasks-bar .task-info .percent {
+    display: inline-block;
+    float: right;
+    font-size: 13px;
+    font-weight: 600;
+    padding-left: 10px;
+    margin-top: -4px;
+}
+
+.dropdown-menu.extended .progress {
+    margin-bottom: 0 !important;
+    height: 10px;
+}
+
+.dropdown-menu.inbox li a .photo img {
+    border-radius: 2px 2px 2px 2px;
+    float: left;
+    height: 40px;
+    margin-right: 4px;
+    width: 40px;
+}
+
+.dropdown-menu.inbox li a .subject {
+    display: block;
+}
+
+.dropdown-menu.inbox li a .subject .from {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.dropdown-menu.inbox li a .subject .time {
+    font-size: 11px;
+    font-style: italic;
+    font-weight: bold;
+    position: absolute;
+    right: 5px;
+}
+
+.dropdown-menu.inbox li a .message {
+    display: block !important;
+    font-size: 11px;
+}
+
+    .dropdown-menu.extended.tasks-bar {
+    display: block !important;
+    background-color:rgba(255, 255, 255, 0.9) !important;
+}
+
+    </style>
+}
+
+
+<div class="col-md-3">
+
+    <ul class="dropdown-menu extended tasks-bar">
+        <li>
+            <p class="green">TODO's</p>
+        </li>
+        <li>
+            <a href="@Url.Action("Wizard", "Quote")">
+                <div class="task-info">
+                    <div class="desc">Add New Job</div>
+                    <div class="percent"></div>
+                </div>
+                <div class="progress progress-striped">
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                        <span class="sr-only">40% Complete (success)</span>
+                    </div>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="@Url.Action("Index", "Inventory")">
+                <div class="task-info">
+                    <div class="desc">Add Stone to Inventory</div>
+                    <div class="percent"></div>
+                </div>
+                <div class="progress progress-striped">
+                    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                        <span class="sr-only">60% Complete (warning)</span>
+                    </div>
+                </div>
+            </a>
+        </li>
+
+        <li>
+            <a href="@Url.Action("Index", "Sinkinventory")">
+                <div class="task-info">
+                    <div class="desc">Add Sink to Inventory</div>
+                    <div class="percent"></div>
+                </div>
+                <div class="progress progress-striped">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                        <span class="sr-only">45% Complete</span>
+                    </div>
+                </div>
+
+            </a>
+        </li>
+
+
+        <li>
+            <a href="#">
+                <div class="task-info">
+                    <div class="desc">View Task Report</div>
+                    <div class="percent"></div>
+                </div>
+                <div class="progress progress-striped">
+                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                        <span class="sr-only">87% Complete</span>
+                    </div>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <div class="task-info">
+                    <div class="desc">View Inventory Report</div>
+                    <div class="percent"></div>
+                </div>
+                <div class="progress progress-striped">
+                    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                        <span class="sr-only">33% Complete (danger)</span>
+                    </div>
+                </div>
+            </a>
+        </li>
+
+        <li class="external">
+            <a href="#">See All Todos</a>
+        </li>
+    </ul>
+
+
+
+</div>

@@ -1,0 +1,142 @@
+﻿@model ProStoneIMS2015.Models.Subscriber
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <section class="panel panel-primary">
+        <header class="panel-heading panel-primary">
+            <strong>Settings</strong>
+        </header>
+        <div class="panel-body">
+            <div class="col-lg-2">
+                <button class="btn btn-danger btn-lg" type="submit">Submit</button>
+            </div>
+            <div class="col-lg-8">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.TenantId)
+            </div>
+        </div>
+    </section>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <section class="panel panel-info">
+                <header class="panel-heading">
+                    Company Info
+                </header>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => Model.CompanyName, new { @class = "col-lg-3 control-label" })
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(m => m.CompanyName, new { @class = "form-control required" })
+                                <p class="help-block">@Html.ValidationMessageFor(m => m.CompanyName)</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => Model.Street, new { @class = "col-lg-3 control-label" })
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(m => m.Street, new { @class = "form-control required" })
+                                <p class="help-block">@Html.ValidationMessageFor(m => m.Street)</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => Model.Address, new { @class = "col-lg-3 control-label" })
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(m => m.Address, new { @class = "form-control required" })
+                                <p class="help-block">@Html.ValidationMessageFor(m => m.Address)</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => Model.City, new { @class = "col-lg-3 control-label" })
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(m => m.City, new { @class = "form-control required" })
+                                <p class="help-block">@Html.ValidationMessageFor(m => m.City)</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => Model.State, new { @class = "col-lg-3 control-label" })
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(m => m.State, new { @class = "form-control required" })
+                                <p class="help-block">@Html.ValidationMessageFor(m => m.State)</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => Model.Zip, new { @class = "col-lg-3 control-label" })
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(m => m.Zip, new { @class = "form-control required" })
+                                <p class="help-block">@Html.ValidationMessageFor(m => m.Zip)</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => Model.Country, new { @class = "col-lg-3 control-label" })
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(m => m.Country, new { @class = "form-control required" })
+                                <p class="help-block">@Html.ValidationMessageFor(m => m.Country)</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => Model.CustomerContactEmail, new { @class = "col-lg-3 control-label" })
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(m => m.CustomerContactEmail, new { @class = "form-control required" })
+                                <p class="help-block">@Html.ValidationMessageFor(m => m.CustomerContactEmail)</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => Model.CustomerContactPhone, new { @class = "col-lg-3 control-label" })
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(m => m.CustomerContactPhone, new { @class = "form-control required" })
+                                <p class="help-block">@Html.ValidationMessageFor(m => m.CustomerContactPhone)</p>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-lg-6">
+            <section class="panel panel-info">
+                <header class="panel-heading">
+                    Quote Default
+                </header>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => Model.StateTax, new { @class = "col-lg-3 control-label" })
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(m => m.StateTax, new { @class = "form-control required" })
+                                <p class="help-block">@Html.ValidationMessageFor(m => m.StateTax)</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => Model.PlusVal, new { @class = "col-lg-3 control-label" })
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(m => m.PlusVal, new { @class = "form-control required" })
+                                <p class="help-block">@Html.ValidationMessageFor(m => m.PlusVal)</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+}

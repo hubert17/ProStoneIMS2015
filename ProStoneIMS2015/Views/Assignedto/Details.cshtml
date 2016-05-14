@@ -1,0 +1,38 @@
+﻿    @model ProStoneIMS2015.Models.Assignedto
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 class="modal-title">Detail</h3>
+    </div>
+
+    <div class="modal-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover table-condensed" id="detail-modal">
+                <tr>
+                    <td width="30%">@Html.LabelFor(m => Model.AssignedtoName):</td>
+                    <td width="70%">@Model.AssignedtoName</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => Model.Email):</td>
+                    <td>@Model.Email</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => Model.ContactNo):</td>
+                    <td>@Model.ContactNo</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => Model.Notes):</td>
+                    <td>@Model.Notes</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => Model.Inactive):</td>
+                    <td>@(Model.Inactive == true ? Html.Raw("<i class='fa fa-check'></i>") : null)</td>
+                </tr>
+            </table>
+        </div>
+
+
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-warning" data-dismiss="modal">Close</button>
+    </div>

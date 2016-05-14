@@ -1,0 +1,183 @@
+﻿@{ 
+    //var useCDN = string.Format("{0}://{1}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~")).Contains("prostoneims.com");
+    var useCDN = false;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="img/favicon.png">
+    <title>@ViewBag.Title - ProStone Information Management System</title>
+
+    @if (useCDN)
+    {
+        @Styles.Render("~/Content/css-cdn")
+    }
+    else
+    {
+        @Styles.Render("~/Content/css")
+    }
+
+    @RenderSection("customcss", required: false)
+    <style>
+        input,
+        select,
+        textarea {
+            max-width: 480px;
+        }
+    </style>
+
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="@Url.Action("Index","Home")">ProStone IMS</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                @if (Request.IsAuthenticated)
+                {
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="#">Quotes</a>
+                        </li>
+                        <li>
+                            <a href="#">Task</a>
+                        </li>
+                        <li class="menu-item dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Manage <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    @Html.ActionLink("List Item Test", "Index", "Phone")
+                                </li>
+                                <li>
+                                    <a href="#">Granite</a>
+                                </li>
+                                <li><a href="#">Sinks</a></li>
+                                <li><a href="#">Services</a></li>
+                                <li><a href="#">Edge</a></li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a class="trigger right-caret">Misc</a>
+                                    <ul class="dropdown-menu sub-menu">
+                                        <li><a href="#"><span>Lead</span></a></li>
+                                        <li><a href="#"><span>Measurement Assets</span></a></li>
+                                        <li><a href="#"><span>Salesman</span></a></li>
+                                        <li><a href="#"><span>Assigned To's</span></a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a class="trigger right-caret" style="display:none;">Page Templates</a>
+                                    <ul class="dropdown-menu sub-menu">
+                                        <li><a href="/admin2014/PageTemplate/index.html"><span>Index</span></a></li>
+                                        <li><a href="/admin2014/PageTemplate/Modals.html"><span>Modals</span></a></li>
+                                        <li><a href="/admin2014/PageTemplate/Portfolio.aspx"><span>Portfolio</span></a></li>
+                                        <li><a href="/admin2014/PageTemplate/Shop-homepage.aspx"><span>Shop Homepage</span></a></li>
+                                        <li><a href="/admin2014/PageTemplate/Shop-item.aspx"><span>Shop Item</span></a></li>
+                                        <li><a href="/admin2014/PageTemplate/Simple-sidebar.aspx"><span>Simple Sidebar</span></a></li>
+                                        <li><a href="/admin2014/PageTemplate/Small-business.aspx"><span>Small Business</span></a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#">Install Calendar</a>
+                                </li>
+                                <li>
+                                    <a href="#">Task Report</a>
+                                </li>
+                                <li>
+                                    <a href="#">Sales Report</a>
+                                </li>
+                                <li class="nav-divider">
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                }
+                @Html.Partial("_LoginPartial")
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - ProStone Management System</p>
+        </footer>
+    </div>
+
+    @if(useCDN)
+    {
+        @Scripts.Render("~/bundles/jquery-cdn")
+        @Scripts.Render("~/bundles/bootstrap-cdn")
+    }
+    else
+    {
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+    }
+
+    @RenderSection("jqueryval", required: false)
+
+    @*For Dropdown Menu Customization*@
+    <script type='text/javascript'>
+        $(window).load(function () {
+            $(function () {
+                $(".dropdown-menu > li > a.trigger").on("click", function (e) {
+                    var current = $(this).next();
+                    var grandparent = $(this).parent().parent();
+                    if ($(this).hasClass('left-caret') || $(this).hasClass('right-caret'))
+                        $(this).toggleClass('right-caret left-caret');
+                    grandparent.find('.left-caret').not(this).toggleClass('right-caret left-caret');
+                    grandparent.find(".sub-menu:visible").not(current).hide();
+                    current.toggle();
+                    e.stopPropagation();
+                });
+                $(".dropdown-menu > li > a:not(.trigger)").on("click", function () {
+                    var root = $(this).closest('.dropdown');
+                    root.find('.left-caret').toggleClass('right-caret left-caret');
+                    root.find('.sub-menu:visible').hide();
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $('div.modal').on('show.bs.modal', function () {
+            var modal = this;
+            var hash = modal.id;
+            window.location.hash = hash;
+            window.onhashchange = function () {
+                if (!location.hash) {
+                    $(modal).modal('hide');
+                }
+            }
+        });
+
+        $('div.modal').on('hide', function () {
+            var hash = this.id;
+            history.pushState('', document.title, window.location.pathname);
+        });
+    </script>
+    
+    @RenderSection("scripts", required: false)
+</body>
+</html>

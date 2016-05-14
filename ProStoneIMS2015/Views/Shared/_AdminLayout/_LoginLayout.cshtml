@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - DFW Webapp</title>
+
+    @Styles.Render("~/Content/css")
+    @*<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" />*@
+
+    @RenderSection("customcss", required: false)
+
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+
+<body class="login-body">
+    <div class="container">
+        @RenderBody()
+    </div>
+
+        @Scripts.Render("~/bundles/jquery")
+        @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>*@
+
+        @RenderSection("jqueryval", required: false)
+
+        @Scripts.Render("~/bundles/bootstrap")
+        @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>*@
+
+        @*For Dropdown Menu Customization*@
+        <script type='text/javascript'>
+            $(window).load(function () {
+                $(function () {
+                    $(".dropdown-menu > li > a.trigger").on("click", function (e) {
+                        var current = $(this).next();
+                        var grandparent = $(this).parent().parent();
+                        if ($(this).hasClass('left-caret') || $(this).hasClass('right-caret'))
+                            $(this).toggleClass('right-caret left-caret');
+                        grandparent.find('.left-caret').not(this).toggleClass('right-caret left-caret');
+                        grandparent.find(".sub-menu:visible").not(current).hide();
+                        current.toggle();
+                        e.stopPropagation();
+                    });
+                    $(".dropdown-menu > li > a:not(.trigger)").on("click", function () {
+                        var root = $(this).closest('.dropdown');
+                        root.find('.left-caret').toggleClass('right-caret left-caret');
+                        root.find('.sub-menu:visible').hide();
+                    });
+                });
+            });
+        </script>
+
+        <script>
+            $('div.modal').on('show.bs.modal', function () {
+                var modal = this;
+                var hash = modal.id;
+                window.location.hash = hash;
+                window.onhashchange = function () {
+                    if (!location.hash) {
+                        $(modal).modal('hide');
+                    }
+                }
+            });
+
+            $('div.modal').on('hide', function () {
+                var hash = this.id;
+                history.pushState('', document.title, window.location.pathname);
+            });
+        </script>
+
+        @RenderSection("scripts", required: false)
+</body>
+</html>
+

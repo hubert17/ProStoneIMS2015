@@ -1,0 +1,61 @@
+﻿@using WebGridBootstrapPager
+@{
+    var grid = new WebGrid(
+        canPage: true,
+        rowsPerPage: Model.PageSize,
+        canSort: true,
+        ajaxUpdateContainerId: "gridContent");
+
+    grid.Bind(Model.Content, rowCount: Model.TotalRecords, autoSortAndPage: false);
+    grid.Pager(WebGridPagerModes.All);
+}
+<div id="gridContent">
+    @if (String.IsNullOrEmpty(Request.QueryString["showInactive"]) || Request.QueryString["showInactive"].ToLower() == "false")
+            {
+        @grid.GetHtml(htmlAttributes: new { id = "grid" },   // id for ajaxUpdateContainerId parameter
+                        fillEmptyRows: false,
+                        tableStyle: "table table-striped table-hover",
+                        mode: WebGridPagerModes.All,
+                        columns: grid.Columns(
+                          grid.Column("CompanyName", "Subscriber Name", style: "col-lg-4"),
+                          grid.Column("City", "City", style: "col-lg-3"),
+                          grid.Column("State", "State", style: "col-lg-3"),
+                          grid.Column("MembershipDate", header: "Subcriber Since"),
+                          grid.Column(header: "Action", canSort: false, style: "action",
+                            format: @<text>
+                            @Html.Raw("<a data-modal='' href='" + Url.Action("Details", "Subscriber", new { id = item.TenantId }) + "' title='Detail'> <span class='glyphicon glyphicon-search'> </span> </a>")
+                            @Html.Raw("<a data-modal='' href='" + Url.Action("Edit", "Subscriber", new { id = item.TenantId }) + "' title='Edit'> <span class='glyphicon glyphicon-edit'> </span> </a>")
+                            @Html.Raw("<a data-modal='' href='" + Url.Action("Delete", "Subscriber", new { id = item.TenantId }) + "' title='Delete'> <span class='glyphicon glyphicon-trash'> </span> </a>")
+                            <input name="Inactive" style="display:none;" type="checkbox" disabled value="@item.TenantId" @(item.Inactive == true ? "Checked" : null) />
+                            </text>)
+                        ));
+            }
+            else
+            {
+        @grid.GetHtml(htmlAttributes: new { id = "grid" },   // id for ajaxUpdateContainerId parameter
+                        fillEmptyRows: false,
+                        tableStyle: "table table-striped table-hover",
+                        mode: WebGridPagerModes.All,
+                        columns: grid.Columns(
+                          grid.Column("CompanyName", "Subscriber Name", style: "col-lg-4"),
+                          grid.Column("City", "City", style: "col-lg-3"),
+                          grid.Column("State", "State", style: "col-lg-3"),
+                          grid.Column("MembershipDate", header: "Subcriber Since"),
+                          grid.Column(header: "Inactive", format: @<text><input name="Inactive" type="checkbox" disabled value="@item.PhoneId" @(item.Inactive == true ? "Checked" : null) /></text>),
+                          grid.Column(header: "Action", canSort: false, style: "action",
+                            format: @<text>
+                            @Html.Raw("<a data-modal='' href='" + Url.Action("Details", "Subscriber", new { id = item.TenantId }) + "' title='Detail'> <span class='glyphicon glyphicon-search'> </span> </a>")
+                            @Html.Raw("<a data-modal='' href='" + Url.Action("Edit", "Subscriber", new { id = item.TenantId }) + "' title='Edit'> <span class='glyphicon glyphicon-edit'> </span> </a>")
+                            @Html.Raw("<a data-modal='' href='" + Url.Action("Delete", "Subscriber", new { id = item.TenantId }) + "' title='Delete'> <span class='glyphicon glyphicon-trash'> </span> </a>")
+                            </text>)
+                        ));
+            }
+    @grid.BootstrapPager()
+</div>
+
+
+
+
+
+
+

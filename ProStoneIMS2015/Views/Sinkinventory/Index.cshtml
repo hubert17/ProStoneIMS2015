@@ -1,0 +1,324 @@
+﻿@{
+
+    ViewBag.Title = "Sink Inventory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@section customcss{
+    @*<link href="@Url.Content("~/Content/bootstrap-theme.min.css")" rel="stylesheet" type="text/css">*@
+    <link href="@Url.Content("~/Content/grid-0.5.6.css")" rel="stylesheet" type="text/css">
+<link href="@Url.Content("~/Content/bootstrap-datepicker3.css")" rel="stylesheet" type="text/css">
+
+    <style>
+        .clsDatePicker {
+            z-index: 100000 !important;
+        }
+
+        #filter {
+        padding-right: 26px !important;
+            }
+
+    .input-group-btn {
+        position: relative;
+    }
+
+        .input-group-btn a.btn {
+            position: absolute;
+            right: 36px;
+            top: 0px;
+            z-index: 500;
+        }
+
+            .input-group-btn a.btn:hover,
+            .input-group-btn a.btn:active {
+            box-shadow: none;
+        }
+    </style>
+
+    <style>
+        .tt-query {
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+  color: #999
+}
+
+.tt-menu {   
+    top:30px !important; 
+  max-width: 422px;
+  margin-top: 4px;
+  padding: 4px 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+          box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+  padding: 3px 20px;
+  line-height: 24px;
+}
+
+.tt-suggestion.tt-cursor,.tt-suggestion:hover {
+  color: #fff;
+  background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+  margin: 0;
+}
+
+    span.twitter-typeahead {
+  width: 100%;
+}
+.input-group span.twitter-typeahead {
+  display: block !important;
+}
+.input-group span.twitter-typeahead .tt-dropdown-menu {
+  top: 32px !important;
+}
+.input-group.input-group-lg span.twitter-typeahead .tt-dropdown-menu {
+  top: 44px !important;
+}
+.input-group.input-group-sm span.twitter-typeahead .tt-dropdown-menu {
+  top: 28px !important;
+}
+    </style>
+}
+
+
+
+
+<div class="container fill">
+    <h2>Sink Inventory</h2>
+    <br />
+
+    <div class="row">
+        <form class="col-xs-9 col-sm-6 col-md-4 col-lg-4 form-group has-feedback has-clear">
+            <div class="input-group">
+                <span style="position:relative;" class="add-clear-span">
+                    <input type="text"
+                           id="search"
+                           name="search"
+                           value="@ViewBag.filter"
+                           class="typeahead form-control"
+                           style="display: inline"
+                           placeholder="Search" />
+                </span>
+                <span class="input-group-btn">
+                    <a id="clearFilter" class="btn" style="color: rgb(204, 204, 204); text-decoration: none; "><i class="fa fa-times"></i></a>
+                    <button type="submit" name="search" id="search-btn" class="btn btn-info"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </form>
+        <div class="pull-right col-lg-1">
+            <a class="btn btn-success" data-modal="" href="@Url.Action("Create", "SinkInventory")" id="btnCreate">
+                <span class="glyphicon glyphicon-plus"></span>  Add Sink
+            </a>
+        </div>
+    </div>
+    <table id="grid"></table>
+
+</div>
+
+
+
+    @section scripts{
+        <script src="@Url.Content("~/Scripts/grid-0.5.6.js")" type="text/javascript"></script>
+
+        <script>
+            var grid;
+
+            function Add() {
+                $("#playerId").val("");
+                $("#name").val("");
+                $("#placeOfBirth").val("");
+                $("#dateOfBirth").val("");
+                $("#playerModal").modal("show");
+            }
+            function Edit(e) {
+                //window.location.href = "@Url.Action("Edit", "SinkInventory")/" + e.data.id;
+
+                $("#playerId").val(e.data.id);
+                $("#name").val(e.data.record.Name);
+                $("#placeOfBirth").val(e.data.record.PlaceOfBirth);
+                $("#dateOfBirth").val(e.data.record.DateOfBirth);
+                $("#playerModal").modal("show");
+            }
+            function Save() {
+                var player = {
+                    ID: $("#playerId").val(),
+                    Name: $("#name").val(),
+                    PlaceOfBirth: $("#placeOfBirth").val(),
+                    DateOfBirth: $("#dateOfBirth").val()
+                };
+                $.ajax({ url: "Home/Save", type: "POST", data: { player: player } })
+                    .done(function () {
+                        grid.reload();
+                        $("#playerModal").modal("hide");
+                    })
+                    .fail(function () {
+                        alert("Unable to save.");
+                        $("#playerModal").modal("hide");
+                    });
+            }
+            function Remove(e) {
+                $.ajax({ url: "Home/Remove", type: "POST", data: { id: e.data.id } })
+                    .done(function () {
+                        grid.reload();
+                    })
+                    .fail(function () {
+                        alert("Unable to remove.");
+                    });
+            }
+            function Search() {
+                grid.reload({ searchString: $("#search").val() });
+            }
+
+            $(document).ready(function () {
+                grid = $("#grid").grid({
+                    dataSource: "@Url.Action("GetInventory", "SinkInventory")",
+                    dataKey: "Id",
+                    uiLibrary: "bootstrap",
+                    columns: [
+                        { field: "SinkName", title: "Sink", width: "25%", sortable: true },
+                        { field: "SerialNo", title: "Serial #", sortable: true },
+                        { field: "VendorName", title: "Vendor", width: "10%", sortable: true },
+                        { field: "DateAdded", title: "Added", sortable: true, type: 'date', format: 'mm/dd/yyyy' },
+                        { field: "UnitPrice", title: "Unit Price", align: "right" },
+                        { field: "SalesTax", title: "Sales Tax", align: "right" },
+                        { field: "Total", title: "Total", align: "right" },
+                        { title: "Hold# - Job Name", tmpl: "@Html.Raw("<a href='" + Url.Action("Index", "Quote") + "/{QuoteId}' target='_blank' title='Job No: {QuoteId}'>{QuoteName}</a>")", width: "20%", sortable: true },
+                        { field: "DateSold", title: "Sold", sortable: true },
+                        { title: "", tmpl: "@Html.Raw("<a data-modal='' href='" + Url.Action("Edit", "SinkInventory") + "/{Id}' title='Edit'> <span class='glyphicon glyphicon-pencil'> </span> </a>")", width: 34 },
+                        { title: "", tmpl: "@Html.Raw("<a data-modal='' href='" + Url.Action("Delete", "SinkInventory") + "/{Id}' title='Delete'> <span class='glyphicon glyphicon-remove'> </span> </a>")", width: 34 },
+                    ],
+                    pager: { enable: true, limit: 5, sizes: [2, 5, 10, 20] }
+                });
+
+                grid.on("dataBound", function (e, records, totalRecords) {
+                    $("#grid td.consign > div").each(function () {
+                        if ($(this).attr('title') == 'true') {
+                            $(this).html('<span title="Consignment" class="fa fa-check"></span>');
+                        }
+                        else {
+                            $(this).html('');
+                        }
+                    });
+                });
+
+                setTypeAhead('#search');
+            });
+
+
+            //$("#btnSave").on("click", Save);
+            $("#clearFilter").on("click", function () {
+                $("#grid td.consign > div").html('');
+                grid.reload({ searchString: null });
+                $("#grid td.consign > div").each(function () {
+                    if ($(this).attr('title') == 'true') {
+                        $(this).html('<span title="Consignment" class="fa fa-check"></span>');
+                    }
+                    else {
+                        $(this).html('');
+                    }
+                });
+                $('#search').val('').focus();
+            });
+            $("form").submit(function (e) {
+                Search();
+                e.preventDefault();
+            });
+
+        </script>
+
+        <script src="@Url.Content("~/Scripts/typeahead.jquery.min.js")" type="text/javascript"></script>
+
+<script src="@Url.Content("~/Scripts/bootstrap-datepicker.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    function SetUpPickers() {
+        $('.date').datepicker({
+            format: 'mm/dd/yyyy'
+        });
+    }
+</script>
+
+        <script>
+            $(document).ready(function () {
+                $.culture = Globalize.culture("en-GB");
+                $.validator.methods.date = function (value, element) {
+                    //This is not ideal but Chrome passes dates through in ISO1901 format regardless of locale 
+                    //and despite displaying in the specified format.
+
+                    return this.optional(element)
+                        || Globalize.parseDate(value, "mm/dd/yyyy", "en-GB")
+                        || Globalize.parseDate(value, "yyyy-mm-dd");
+                }
+            });
+        </script>
+
+
+        @*<script>
+                $('.typeahead').typeahead({
+                    source: function (query, process) {
+                        return $.get('@Url.Content("~/Inventory/StoneLookup")', { query: query }, function (data) {
+                            return process(data);
+                        });
+                    }
+                });
+            </script>*@
+
+        <script>
+            var substringMatcher = function (strs) {
+                return function findMatches(q, cb) {
+                    var matches, substringRegex;
+
+                     //an array that will be populated with substring matches
+                    matches = [];
+
+                    // regex used to determine if a string contains the substring `q`
+                    substrRegex = new RegExp(q, 'i');
+
+                    // iterate through the pool of strings and for any string that
+                    // contains the substring `q`, add it to the `matches` array
+                    $.each(strs, function (i, str) {
+                        if (substrRegex.test(str)) {
+                            matches.push(str);
+                        }
+                    });
+
+                    cb(matches);
+                };
+            };
+
+            var lookup = ['@Html.Raw(ViewBag.Typeahead)'];
+
+            @*@foreach (var d in ViewBag.StoneLookup)
+            {
+                @:stones.push("@d");
+            }*@
+
+
+            var setTypeAhead = function (o) {
+                $(o).typeahead({
+                    hint: true,
+                    highlight: true,
+                    minLength: 1
+                },
+                {
+                    name: 'lookup',
+                    source: substringMatcher(lookup)
+                });
+            }
+        </script>
+    }

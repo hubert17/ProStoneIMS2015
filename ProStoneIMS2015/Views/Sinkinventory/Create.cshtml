@@ -1,0 +1,118 @@
+﻿@model ProStoneIMS2015.Models.SinkInventory
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 class="modal-title">Add New Inventory</h3>
+</div>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+
+            <div class="form-group">
+                @Html.LabelFor(m => Model.SinkName, new { @class = "control-label col-sm-3" })
+                <div class="col-sm-9">
+                    @*@Html.DropDownListFor(m => m.SinkId, new SelectList((System.Collections.IEnumerable)ViewBag.SinkLookup, "Value", "Text"), "", new { @class = "form-control required" })*@
+                    @Html.TextBoxFor(m => m.SinkName, new { @class = "form-control typeahead tt-lookup" })
+                    <div>
+                        @Html.ValidationMessageFor(m => m.SinkName)
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-3" for="txtSinkCount">Count</label>
+                <div class="col-sm-9">
+                    <input class="form-control required" id="txtSinkCount" name="txtSinkCount" type="text" value="">
+                    <div>
+                    </div>
+                </div>
+            </div>
+
+            @*<div class="form-group">
+                @Html.LabelFor(m => Model.SerialNo, new { @class = "control-label col-sm-3" })
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(m => m.SerialNo, new { @class = "form-control required" })
+                    <div>
+                        @Html.ValidationMessageFor(m => m.SerialNo)
+                    </div>
+                </div>
+            </div>*@
+
+
+            <div class="form-group">
+                @Html.LabelFor(m => Model.VendorId, new { @class = "control-label col-sm-3" })
+                <div class="col-sm-9">
+                    @Html.DropDownListFor(m => m.VendorId, new SelectList((System.Collections.IEnumerable)ViewBag.VendorLookup, "Value", "Text"), "", new { @class = "form-control" })
+                    <div>
+                        @Html.ValidationMessageFor(m => m.VendorId)
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(m => Model.DateAdded, new { @class = "control-label col-sm-3" })
+                <div class="col-sm-9">
+                    <div class="input-group  date">
+                        @Html.TextBoxFor(m => m.DateAdded, new { @class = "form-control required", @Value = @DateTime.Now.ToString("d") })
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                    </div>
+                    <div>
+                        @Html.ValidationMessageFor(m => m.DateAdded)
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => Model.UnitPrice, new { @class = "control-label col-sm-3" })
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(m => m.UnitPrice, new { @class = "form-control" })
+                    <div>
+                        @Html.ValidationMessageFor(m => m.UnitPrice)
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => Model.SalesTax, new { @class = "control-label col-sm-3" })
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(m => m.SalesTax, new { @class = "form-control" })
+                    <div>
+                        @Html.ValidationMessageFor(m => m.SalesTax)
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => Model.Notes, new { @class = "control-label col-sm-3" })
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(m => m.Notes, new { @class = "form-control" })
+                    <div>
+                        @Html.ValidationMessageFor(m => m.Notes)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+        <div class="modal-footer">
+            <span id="progress" class="text-center" style="display: none;">
+                <img src="@Url.Content("~/images/wait.gif")" alt="..." />
+                Wait...
+            </span>
+
+            <input class="btn btn-primary" type="submit" value="Save" />
+            <button class="btn btn-warning" data-dismiss="modal">Close</button>
+        </div>
+}
+<script>
+        $("form").removeData("validator");
+        $("form").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse("form");
+</script>

@@ -1,0 +1,69 @@
+﻿@using WebGridBootstrapPager
+@{
+    var grid = new WebGrid(
+        canPage: true,
+        rowsPerPage: Model.PageSize,
+        canSort: true,
+        ajaxUpdateContainerId: "gridContent");
+
+    grid.Bind(Model.Content, rowCount: Model.TotalRecords, autoSortAndPage: false);
+    grid.Pager(WebGridPagerModes.All);
+}
+<div id="gridContent">
+    @if (String.IsNullOrEmpty(Request.QueryString["showInactive"]) || Request.QueryString["showInactive"].ToLower() == "false")
+            {
+        @grid.GetHtml(htmlAttributes: new { id = "grid" },   // id for ajaxUpdateContainerId parameter
+                        fillEmptyRows: false,
+                        tableStyle: "table table-striped table-hover",
+                        mode: WebGridPagerModes.All,
+                        columns: grid.Columns(
+                          grid.Column("StoneName", "Stone"),
+                          grid.Column(header: "Inventory", canSort: false, style: "",
+                            format: @<text>
+                            @Html.Raw("<a href data-potitle=\""+ item.StoneName + "\" data-poload='" + Url.Action("Inventory", "Stone", new { @StoneId = item.Id }) + "'> View </a>")
+                            </text>),
+                          grid.Column("CatalogID", "Catalog"),
+                          grid.Column("TypeName", "Type"),
+                          grid.Column("Price", header: "Price", format: @<text>@String.Format("{0:C}", item.Price) </text>),
+                          grid.Column("WOPrice", header: "WO Price", format: @<text>@String.Format("{0:C}", item.WOPrice) </text>),
+                          grid.Column(header: "OnPromo", format: @<text>@(item.OnPromo == true ? Html.Raw("<i class='fa fa-check'></i>") : null)</text>),
+                          grid.Column(header: "Action", canSort: false, style: "action",
+                            format: @<text>
+                            @Html.Raw("<a data-modal='' href='" + Url.Action("Details", "Stone", new { id = item.Id }) + "' title='Detail'> <span class='glyphicon glyphicon-search'> </span> </a>")
+                            @Html.Raw("<a data-modal='' href='" + Url.Action("Edit", "Stone", new { id = item.Id }) + "' title='Edit'> <span class='glyphicon glyphicon-edit'> </span> </a>")
+                            @Html.Raw("<a data-modal='' href='" + Url.Action("Delete", "Stone", new { id = item.Id }) + "' title='Delete'> <span class='glyphicon glyphicon-trash'> </span> </a>")
+                            <input name="Inactive" style="display:none;" type="checkbox" disabled value="@item.Id" @(item.Inactive == true ? "Checked" : null) />
+                            </text>)
+                        ));
+            }
+            else
+            {
+        @grid.GetHtml(htmlAttributes: new { id = "grid" },   // id for ajaxUpdateContainerId parameter
+                        fillEmptyRows: false,
+                        tableStyle: "table table-striped table-hover",
+                        mode: WebGridPagerModes.All,
+                        columns: grid.Columns(
+                          grid.Column("StoneName", "Stone"),
+                          grid.Column("CatalogID", "Catalog"),
+                          grid.Column("TypeName", "Type"),
+                          grid.Column("Price", header: "Price", format: @<text>@String.Format("{0:C}", item.Price) </text>),
+                          grid.Column("WOPrice", header: "WO Price", format: @<text>@String.Format("{0:C}", item.WOPrice) </text>),
+                          grid.Column(header: "OnPromo", format: @<text>@(item.OnPromo == true ? Html.Raw("<i class='fa fa-check'></i>") : null)</text>),
+                          grid.Column(header: "Action", canSort: false, style: "action",
+                            format: @<text>
+                            @Html.Raw("<a data-modal='' href='" + Url.Action("Details", "Stone", new { id = item.Id }) + "' title='Detail'> <span class='glyphicon glyphicon-search'> </span> </a>")
+                            @Html.Raw("<a data-modal='' href='" + Url.Action("Edit", "Stone", new { id = item.Id }) + "' title='Edit'> <span class='glyphicon glyphicon-edit'> </span> </a>")
+                            @Html.Raw("<a data-modal='' href='" + Url.Action("Delete", "Stone", new { id = item.Id }) + "' title='Delete'> <span class='glyphicon glyphicon-trash'> </span> </a>")
+                            </text>)
+                        ));
+            }
+    @grid.BootstrapPager()
+</div>
+
+
+
+
+
+
+
+

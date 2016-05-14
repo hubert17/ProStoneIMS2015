@@ -1,0 +1,106 @@
+﻿@model ProStoneIMS2015.Models.StoneInventory
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    <div>
+        <h4>StoneInventory</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Stone.StoneName)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Stone.StoneName)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.subscriber.SubscriberKey)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.subscriber.SubscriberKey)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.SerialNo)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.SerialNo)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Length)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Length)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Width)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Width)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.LotNo)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.LotNo)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.VendorId)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.VendorId)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Consignment)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Consignment)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Notes)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Notes)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Inactive)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Inactive)
+            </dd>
+    
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

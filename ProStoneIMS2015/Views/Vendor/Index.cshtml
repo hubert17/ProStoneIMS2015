@@ -1,0 +1,95 @@
+﻿
+@model ProStoneIMS2015.Models.PagedList<ProStoneIMS2015.Models.Vendor>
+@{
+
+    ViewBag.Title = "Vendor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+
+
+
+@section customcss{
+    @*<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />*@
+    <style>
+        #grid th:nth-last-child(2), #grid td:nth-last-child(2) {
+            @if(Request.QueryString["showInactive"] == "True")
+            {
+                <text>text-align: center;</text>
+            }
+        }
+     </style>
+
+<style type="text/css">
+        /* CSS used here will be applied after bootstrap.css */
+
+#filter {
+        padding-right: 26px !important;
+            }
+
+    .input-group-btn {
+        position: relative;
+    }
+
+        .input-group-btn a.btn {
+            position: absolute;
+            right: 36px;
+            top: 0px;
+            z-index: 500;
+        }
+
+            .input-group-btn a.btn:hover,
+            .input-group-btn a.btn:active {
+            box-shadow: none;
+        }
+</style>
+}
+
+<div class="row">
+    <div class="col-md-8 h3">
+        <strong>Manage Vendors</strong>
+    </div>
+    <div class="col-md-4 h3">
+        <a href="@Url.Action("Index", "Vendor", new { showInactive = ViewBag.showInactive })" class="btn btn-default btn-xs pull-right">@ViewBag.labelInactive Inactive</a>
+    </div>
+</div>
+
+
+<div class="well">
+    @*@using (Html.BeginForm("index", null, FormMethod.Get))*@
+    @using (Ajax.BeginForm("index", null, new AjaxOptions { HttpMethod = "Get", InsertionMode = InsertionMode.Replace, UpdateTargetId = "gridContent", OnSuccess = "muText" }, new { id = "filter", pagesize = "100" }))
+    {
+        <div class="row">
+            <div class="col-xs-9 col-sm-6 col-md-5 col-lg-5 form-group has-feedback has-clear">
+                <div class="input-group">
+                    <span style="position:relative;" class="add-clear-span">
+                        <input type="text"
+                               id="search-input"
+                               name="filter"
+                               value="@ViewBag.filter"
+                               class="form-control"
+                               style="display: inline"
+                               placeholder="Search" />
+                        </span>
+                    <span class="input-group-btn">
+                        <a id="clearFilter" class="btn" style="color: rgb(204, 204, 204); text-decoration: none; "><i class="fa fa-times"></i></a>
+                        <button type="submit" name="search" id="search-btn" class="btn btn-info"><i class="fa fa-search"></i></button>
+                    </span>
+</div>
+            </div>
+            <div class="pull-right col-lg-1">
+                <a class="btn btn-success" data-modal="" href="@Url.Action("Create", "Vendor")" id="btnCreate">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </a>
+            </div>
+        </div>
+    }
+
+    <div style="margin-top:17px;" class="table-responsive">
+        @Html.Partial("_Grid", Model)
+    </div>
+
+</div>
+
+

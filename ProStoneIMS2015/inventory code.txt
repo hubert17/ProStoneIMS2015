@@ -1,0 +1,33 @@
+
+@model ProStoneIMS2015.Models.StoneInventoryList<ProStoneIMS2015.Models.StoneInventory>
+@{
+    var grid2 = new WebGrid(canSort: true, ajaxUpdateContainerId: "gridContent2");
+    grid2.Bind(Model.Content);
+}
+
+<div id="gridContent2">
+    @grid2.GetHtml(htmlAttributes: new { id = "grid2" },   // id for ajaxUpdateContainerId parameter
+                        fillEmptyRows: false,
+                        tableStyle: "table table-striped table-hover",
+                        mode: WebGridPagerModes.All,
+                        columns: grid2.Columns(
+                          grid2.Column("SerialNo", "Length"),
+                          grid2.Column("Length", "Length"),
+                          grid2.Column("Width", "Width"),
+                          grid2.Column("Width", "Width"),
+                          grid2.Column("LotNo", "LotNo"),
+                          grid2.Column("VendorId", "VendorId"),
+                          grid2.Column(header: "Consignment", format: @<text>@(item.Consignment == true ? Html.Raw("<i class='fa fa-check'></i>") : null)</text>),
+                          grid2.Column(header: "Action", canSort: false, style: "action",
+                            format: @<text>
+                                @Html.Raw("<a data-modal='' href='" + Url.Action("InventoryEdit", "Stone", new { id = item.Id }) + "' title='Edit'> <span class='glyphicon glyphicon-edit'> </span> </a>")
+                                @Html.Raw("<a data-modal='' href='" + Url.Action("InventoryDelete", "Stone", new { id = item.Id }) + "' title='Delete'> <span class='glyphicon glyphicon-trash'> </span> </a>")
+                            </text>)
+                        ));
+
+</div>
+
+
+<div id="InventoryPopover">
+    
+</div>

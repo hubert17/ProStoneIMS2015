@@ -1,0 +1,66 @@
+﻿@model ProStoneIMS2015.Models.Subscriber
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 class="modal-title">Detail</h3>
+</div>
+
+<div class="modal-body">
+    <div class="table-responsive">
+        <table class="table table-hover" id="detail-modal">
+            <tr>
+                <td class="col-sm-4">@Html.LabelFor(m => Model.Id)</td>
+                <td class="col-sm-8">@Model.Id</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => Model.CompanyName)</td>
+                <td>@Model.CompanyName</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => Model.SubscriberKey)</td>
+                <td>@Model.SubscriberKey</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => Model.MembershipDate)</td>
+                <td>@Model.MembershipDate</td>
+            </tr>
+            <tr>
+                <td class="col-sm-4">@Html.LabelFor(m => Model.RegName)</td>
+                <td class="col-sm-6">@Model.RegName</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => Model.Address)</td>
+                <td>@Model.Address, @Model.State, @Model.State, @Model.Zip</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => Model.Country)</td>
+                <td>@Model.Country</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => Model.Phone)</td>
+                <td>@Model.Phone</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => Model.Email)</td>
+                <td>@Model.Email</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => Model.AltEmail)</td>
+                <td>@Model.AltEmail</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => Model.CustomerContactEmail)</td>
+                <td>@Model.CustomerContactEmail</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => Model.CustomerContactPhone)</td>
+                <td>@Model.CustomerContactPhone</td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-warning" data-dismiss="modal">Close</button>
+</div>

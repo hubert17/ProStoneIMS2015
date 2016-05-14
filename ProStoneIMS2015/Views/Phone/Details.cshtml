@@ -1,0 +1,31 @@
+﻿    @model ProStoneIMS2015.Models.Phone
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 class="modal-title">Detail</h3>
+    </div>
+
+    <div class="modal-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" id="detail-modal">
+                <tr>
+                    <td width="30%">@Html.LabelFor(m => Model.Model):</td>
+                    <td width="70%">@Model.Model</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => Model.Company):</td>
+                    <td>@Model.Company</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => Model.Price):</td>
+                    <td>@Model.Price</td>
+                </tr>
+            </table>
+        </div>
+
+
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-warning" data-dismiss="modal">Close</button>
+    </div>
